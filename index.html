@@ -400,6 +400,11 @@ p.final-lines{display:block;max-width:720px;line-height:1.7}
 .opt:has(input:checked){border-color:var(--brown);box-shadow:inset 0 0 0 1px var(--brown)}
 .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
 .pay-note{font-size:13.5px;color:var(--muted);text-align:center}
+.rev-photos{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:260px;grid-auto-flow:dense;gap:10px;margin-top:22px}
+.rph{margin:0;border-radius:18px;overflow:hidden;background:var(--sand)}
+.rph img{width:100%;height:100%;object-fit:cover}
+.rph.wide{grid-column:span 2;grid-row:span 2}
+@media (max-width:860px){.rev-photos{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:170px;gap:8px}.rph{border-radius:14px}.rph.wide{grid-row:span 1}.rph:last-child{grid-column:span 2;grid-row:span 2}}
 /* responsive */
 @media (max-width:1024px){
   .prac-grid,.p-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -727,6 +732,7 @@ p.final-lines{display:block;max-width:720px;line-height:1.7}
         <figcaption>Участница ретрита</figcaption>
       </figure>
     </div>
+    <div class="rev-photos rv"><figure class="rph"><img src="img/rev-hug.webp" alt="Участницы ретрита обнимаются в зале" loading="lazy"></figure><figure class="rph"><img src="img/rev-smile.webp" alt="Участница ретрита в зале для практик" loading="lazy"></figure><figure class="rph wide"><img src="img/rev-group.webp" alt="Участницы прошлого ретрита вместе на поляне" loading="lazy"></figure><figure class="rph"><img src="img/rev-self.webp" alt="Практика объятия себя" loading="lazy"></figure><figure class="rph"><img src="img/rev-move.webp" alt="Телесная практика в зале" loading="lazy"></figure><figure class="rph"><img src="img/rev-notes.webp" alt="Участницы пишут в дневниках" loading="lazy"></figure></div>
     <p class="rev-src rv">Отзывы из чата участниц прошлого ретрита Кристины в Telegram.</p>
   </div>
   </div>
@@ -839,7 +845,7 @@ p.final-lines{display:block;max-width:720px;line-height:1.7}
     <div class="rv"><div class="eyebrow">Частые вопросы</div><h2 class="h2" style="margin-top:14px;margin-bottom:36px">Ответы до того, как вы спросите</h2></div>
     <details><summary>Когда и где проходит ретрит?<span class="pm" aria-hidden="true">+</span></summary><div class="a">4–7 февраля 2027 года, в SABI Club — загородном клубе на озере в заповедной зоне Валдайского района Новгородской области.</div></details>
     <details><summary>Во сколько заезд и отъезд?<span class="pm" aria-hidden="true">+</span></summary><div class="a">Заезд и размещение — 4 февраля в 14:00. Отъезд — 7 февраля в 16:00, после обеда.</div></details>
-    <details><summary>Можно ли приехать одной?<span class="pm" aria-hidden="true">+</span></summary><div class="a">Да. Есть вариант с одноместным проживанием, а на месте вас ждёт женский круг — знакомиться можно с первого вечера.</div></details>
+    <details><summary>Можно ли приехать одной?<span class="pm" aria-hidden="true">+</span></summary><div class="a">Да, конечно! Можно приехать одной и жить в номере одной — для этого выберите тариф «Одноместное проживание». Если выберете двухместный тариф, мы расселим вас по двое. А на месте вас ждёт женский круг — знакомиться можно с первого вечера.</div></details>
     <details><summary>Подойдёт ли ретрит, если в жизни всё хорошо?<span class="pm" aria-hidden="true">+</span></summary><div class="a">Да. Сюда едут не только чтобы что-то исправить. Можно приехать за отдыхом, женской компанией, танцами, баней, природой и новыми впечатлениями.</div></details>
     <details><summary>Нужно ли иметь опыт практик?<span class="pm" aria-hidden="true">+</span></summary><div class="a">Нет, никакого опыта не требуется. Приезжать можно, даже если вы никогда раньше не занимались телесными практиками, танцами или медитациями. Кристина объясняет каждую практику и ведёт группу шаг за шагом, а вы участвуете в своём темпе.</div></details>
     <details><summary>Что делать, если я стесняюсь танцевать?<span class="pm" aria-hidden="true">+</span></summary><div class="a">Танцевально-двигательная терапия — это движение без необходимости красиво танцевать или соответствовать правилам. Можно двигаться так, как хочется.</div></details>
