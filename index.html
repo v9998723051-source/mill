@@ -252,10 +252,12 @@ footer a{color:#E8DCCB}
 .foot-bottom{margin-top:36px;padding-top:20px;border-top:1px solid rgba(255,255,255,.1);color:#A3978B;font-size:13px}
 
 /* mobile bar */
-.mbar{position:fixed;left:0;right:0;bottom:0;z-index:20;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:rgba(246,241,234,.94);backdrop-filter:blur(10px);box-shadow:0 -8px 24px -16px rgba(0,0,0,.35);display:none;transform:translateY(110%);transition:transform .35s ease}
-.mbar.show{transform:none}
-.mbar .btn{width:100%}
-.mbar small{display:block;text-align:center;font-size:12.5px;color:var(--muted);margin-top:4px}
+.mbar{position:fixed;top:12px;left:50%;z-index:30;width:min(640px,calc(100% - 24px));display:flex;align-items:center;gap:14px;padding:8px 8px 8px 20px;border-radius:999px;background:rgba(250,246,240,.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(122,86,64,.25);box-shadow:0 16px 40px -12px rgba(30,20,10,.45);color:var(--ink);opacity:0;pointer-events:none;transform:translate(-50%,-140%);transition:transform .45s cubic-bezier(.2,.8,.2,1),opacity .3s}
+.mbar.show{opacity:1;pointer-events:auto;transform:translate(-50%,0)}
+.mb-txt{flex:1;min-width:0;line-height:1.25}
+.mb-txt b{display:block;font-family:var(--serif);font-weight:500;font-size:19px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mb-txt small{display:block;font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mbar .btn{flex:none;min-height:46px;padding:10px 22px;font-size:15px}
 
 /* reveal */
 .rv{opacity:0;transform:translateY(22px);transition:opacity .9s ease,transform .9s ease}
@@ -419,8 +421,10 @@ p.final-lines{display:block;max-width:720px;line-height:1.7}
   .rev-grid{grid-template-columns:minmax(0,1fr)}
   .rev-slot{min-height:140px}
   .foot{grid-template-columns:minmax(0,1fr)}
-  .mbar{display:block}
-  body.has-mbar{padding-bottom:96px}
+  .mbar{top:8px;padding:6px 6px 6px 16px;gap:10px}
+  .mb-txt b{font-size:16px}
+  .mb-txt small{font-size:11.5px}
+  .mbar .btn{min-height:42px;padding:8px 16px;font-size:14px}
 }
 @media (max-width:600px){
   body{font-size:16px}
@@ -888,7 +892,7 @@ p.final-lines{display:block;max-width:720px;line-height:1.7}
   </div>
 </footer>
 
-<div class="mbar" id="mbar"><a class="btn" href="#booking">Забронировать место</a><small>Бронирование — 10&nbsp;000&nbsp;₽</small></div>
+<div class="mbar" id="mbar" role="region" aria-label="Бронирование"><div class="mb-txt"><b>4–7 февраля · Валдай</b><small>Бронь места — 10&nbsp;000&nbsp;₽</small></div><a class="btn" href="#booking">Я с вами!</a></div>
 
 <script>
 (function(){
@@ -972,10 +976,10 @@ p.final-lines{display:block;max-width:720px;line-height:1.7}
   // Mobile booking bar: visible after hero, hidden near booking form
   var mbar = document.getElementById('mbar'), hero = document.querySelector('.hero'), book = document.getElementById('booking');
   var pastHero = false, atBook = false;
-  function upd(){ var s = pastHero && !atBook; mbar.classList.toggle('show', s); document.body.classList.toggle('has-mbar', true); }
+  function updBar(){ mbar.classList.toggle('show', pastHero && !atBook); }
   if ('IntersectionObserver' in window) {
-    new IntersectionObserver(function(es){ pastHero = !es[0].isIntersecting; upd(); }).observe(hero);
-    new IntersectionObserver(function(es){ atBook = es[0].isIntersecting; upd(); }, {rootMargin:'0px 0px -10% 0px'}).observe(book);
+    new IntersectionObserver(function(es){ pastHero = !es[0].isIntersecting; updBar(); }, {rootMargin:'-55% 0px 0px 0px'}).observe(hero);
+    new IntersectionObserver(function(es){ atBook = es[0].isIntersecting; updBar(); }, {rootMargin:'0px 0px -10% 0px'}).observe(book);
   }
 
   // Booking: every lead goes to Kristina's Telegram, then payment via YooKassa
