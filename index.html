@@ -418,6 +418,9 @@ p.final-lines{display:block;max-width:720px;line-height:1.7}
 .host-roles i{font-style:normal;color:var(--sage-d);margin:0 4px}
 .host-bio{margin-top:20px;display:flex;flex-direction:column;gap:12px;font-size:17px;color:var(--ink)}
 .host-quote{font-family:var(--serif);font-style:italic;font-size:clamp(21px,2.2vw,25px);line-height:1.35;color:var(--green);padding-left:16px;border-left:2px solid var(--brown)}
+.card-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.pr-img{width:68px;height:68px;border-radius:50%;object-fit:cover;flex:none;box-shadow:0 0 0 3px var(--milk-2)}
+.card.dark .pr-img{box-shadow:0 0 0 3px rgba(239,233,223,.25)}
 /* responsive */
 @media (max-width:1024px){
   .prac-grid,.p-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -622,14 +625,14 @@ p.final-lines{display:block;max-width:720px;line-height:1.7}
       <div class="rv"><div class="eyebrow">Практики</div><h2 class="h2" style="margin-top:14px">Что вы сможете попробовать</h2></div>
     </div>
     <div class="prac-grid">
-      <article class="card rv"><div class="num">01</div><h3>Телесные практики</h3><p>Время, когда внимание наконец на вас: заметить, где тело напряжено, а где ему хорошо, и позволить себе расслабиться.</p></article>
-      <article class="card rv"><div class="num">02</div><h3>Танцевально-двигательная терапия</h3><p>Движение без необходимости красиво танцевать. Двигаться так, как хочется, — без правильных шагов и чужой оценки.</p></article>
-      <article class="card rv"><div class="num">03</div><h3>Тантрические практики</h3><p>Исследование чувственности, присутствия, личных границ и контакта с собой — бережно и в своём темпе.</p></article>
-      <article class="card rv"><div class="num">04</div><h3>Динамические медитации</h3><p>Медитация, в которой не нужно сидеть неподвижно: движение и дыхание помогают выдохнуть и прислушаться к себе.</p></article>
-      <article class="card rv"><div class="num">05</div><h3>Дыхательная практика</h3><p>Осознанное дыхание, которое помогает замедлиться и лучше чувствовать свои ощущения.</p></article>
-      <article class="card dark rv"><div class="num">06</div><h3>Целительная банная церемония</h3><p>Тепло, пар, отдых и забота о теле — три часа в банных домиках на берегу озера.</p></article>
-      <article class="card rv"><div class="num">07</div><h3>Тишина</h3><p>Время без информационного шума, когда можно просто побыть с собой.</p></article>
-      <article class="card rv"><div class="num">08</div><h3>Женский круг</h3><p>Место, где можно говорить искренне, быть услышанной и слышать других.</p></article>
+      <article class="card rv"><div class="card-top"><img class="pr-img" src="img/pr-body.webp" alt="Телесные практики" loading="lazy" width="120" height="120"><div class="num">01</div></div><h3>Телесные практики</h3><p>Время, когда внимание наконец на вас: заметить, где тело напряжено, а где ему хорошо, и позволить себе расслабиться.</p></article>
+      <article class="card rv"><div class="card-top"><img class="pr-img" src="img/pr-dance.webp" alt="Танцевально-двигательная терапия" loading="lazy" width="120" height="120"><div class="num">02</div></div><h3>Танцевально-двигательная терапия</h3><p>Движение без необходимости красиво танцевать. Двигаться так, как хочется, — без правильных шагов и чужой оценки.</p></article>
+      <article class="card rv"><div class="card-top"><img class="pr-img" src="img/pr-tantra.webp" alt="Тантрические практики" loading="lazy" width="120" height="120"><div class="num">03</div></div><h3>Тантрические практики</h3><p>Исследование чувственности, присутствия, личных границ и контакта с собой — бережно и в своём темпе.</p></article>
+      <article class="card rv"><div class="card-top"><img class="pr-img" src="img/pr-dynamic.webp" alt="Динамические медитации" loading="lazy" width="120" height="120"><div class="num">04</div></div><h3>Динамические медитации</h3><p>Медитация, в которой не нужно сидеть неподвижно: движение и дыхание помогают выдохнуть и прислушаться к себе.</p></article>
+      <article class="card rv"><div class="card-top"><img class="pr-img" src="img/pr-breath.webp" alt="Дыхательная практика" loading="lazy" width="120" height="120"><div class="num">05</div></div><h3>Дыхательная практика</h3><p>Осознанное дыхание, которое помогает замедлиться и лучше чувствовать свои ощущения.</p></article>
+      <article class="card dark rv"><div class="card-top"><img class="pr-img" src="img/pr-banya.webp" alt="Целительная банная церемония" loading="lazy" width="120" height="120"><div class="num">06</div></div><h3>Целительная банная церемония</h3><p>Тепло, пар, отдых и забота о теле — три часа в банных домиках на берегу озера.</p></article>
+      <article class="card rv"><div class="card-top"><img class="pr-img" src="img/pr-silence.webp" alt="Тишина" loading="lazy" width="120" height="120"><div class="num">07</div></div><h3>Тишина</h3><p>Время без информационного шума, когда можно просто побыть с собой.</p></article>
+      <article class="card rv"><div class="card-top"><img class="pr-img" src="img/pr-circle.webp" alt="Женский круг" loading="lazy" width="120" height="120"><div class="num">08</div></div><h3>Женский круг</h3><p>Место, где можно говорить искренне, быть услышанной и слышать других.</p></article>
     </div>
   </div>
 </section>
