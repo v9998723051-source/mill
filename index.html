@@ -391,6 +391,15 @@ p.final-lines{display:block;max-width:720px;line-height:1.7}
 .send-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
 .send-row .btn{flex:1 1 200px}
 .send-ph{margin-top:12px;font-size:14.5px;color:var(--muted)}
+.lbl{font-weight:600;font-size:15px}
+.pay-opts{display:grid;gap:8px}
+.opt{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;background:#fff;border:1px solid var(--sand-d);border-radius:14px;cursor:pointer}
+.opt input{width:20px;height:20px;margin-top:2px;flex:none;accent-color:var(--brown)}
+.opt b{display:block;font-size:15.5px}
+.opt small{display:block;color:var(--muted);font-size:13.5px}
+.opt:has(input:checked){border-color:var(--brown);box-shadow:inset 0 0 0 1px var(--brown)}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.pay-note{font-size:13.5px;color:var(--muted);text-align:center}
 /* responsive */
 @media (max-width:1024px){
   .prac-grid,.p-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -788,28 +797,37 @@ p.final-lines{display:block;max-width:720px;line-height:1.7}
       <h2 class="h2" style="margin-top:14px">Как оплатить участие?</h2>
       <p class="lead" style="margin-top:18px">Вы можете оплатить ретрит сразу в полном объёме. А если сейчас удобнее внести только часть суммы — забронируйте место предоплатой 10&nbsp;000&nbsp;₽, а остаток оплатите не позднее чем за месяц до ретрита.</p>
       <div class="steps">
-        <div class="step"><i>1</i><p>Вы оставляете заявку.</p></div>
-        <div class="step"><i>2</i><p>Организатор связывается с вами и отвечает на вопросы.</p></div>
-        <div class="step"><i>3</i><p>Вы оплачиваете полную сумму или вносите предоплату 10&nbsp;000&nbsp;₽.</p></div>
-        <div class="step"><i>4</i><p>Место закрепляется за вами.</p></div>
+        <div class="step"><i>1</i><p>Заполните форму и выберите: бронь 10&nbsp;000&nbsp;₽ или полная оплата.</p></div>
+        <div class="step"><i>2</i><p>Оплатите на защищённой странице ЮKassa.</p></div>
+        <div class="step"><i>3</i><p>Место закрепляется за вами — Кристина получает вашу бронь.</p></div>
+        <div class="step"><i>4</i><p>Кристина связывается с вами и отвечает на все вопросы.</p></div>
       </div>
       <p style="margin-top:28px">Удобнее написать сразу? <a href="https://t.me/kristinaperelyot">Telegram @kristinaperelyot</a> или <a href="tel:+79201841261">+7 920 184-12-61</a></p>
     </div>
     <form class="f rv" id="form" novalidate>
       <div class="fld"><label for="fName">Ваше имя</label><input id="fName" name="name" autocomplete="given-name" required maxlength="80"></div>
       <div class="fld"><label for="fContact">Телефон или Telegram для связи</label><input id="fContact" name="contact" autocomplete="tel" inputmode="text" required maxlength="80" placeholder="+7 900 000-00-00 или @username"></div>
+      <div class="fld"><label for="fEmail">Почта для чека</label><input id="fEmail" name="email" type="email" autocomplete="email" inputmode="email" required maxlength="120" placeholder="name@mail.ru"></div>
       <div class="fld"><label for="fPlan">Вариант размещения</label>
         <select id="fPlan" name="plan">
-          <option value="double" data-late="Двухместное — 55 000 ₽">Двухместное — 51&nbsp;000&nbsp;₽ (ранняя цена до 1 декабря)</option>
-          <option value="single" data-late="Одноместное — 61 000 ₽">Одноместное — 57&nbsp;000&nbsp;₽ (ранняя цена до 1 декабря)</option>
-          <option value="friend" data-late="С подругой — 100 000 ₽ за двоих">С подругой — 96&nbsp;000&nbsp;₽ за двоих (ранняя цена до 1 декабря)</option>
+          <option value="double" data-late="Двухместное — 55 000 ₽">Двухместное — 51&nbsp;000&nbsp;₽</option>
+          <option value="single" data-late="Одноместное — 61 000 ₽">Одноместное — 57&nbsp;000&nbsp;₽</option>
+          <option value="friend" data-late="С подругой — 100 000 ₽ за двоих">С подругой — 96&nbsp;000&nbsp;₽ за двоих</option>
           <option value="undecided" selected>Пока не решила</option>
         </select>
       </div>
+      <div class="fld"><span class="lbl">Как оплатить</span>
+        <div class="pay-opts">
+          <label class="opt"><input type="radio" name="mode" value="prepay" checked><span><b>Забронировать место — 10&nbsp;000&nbsp;₽</b><small>остаток — не позднее чем за месяц до ретрита</small></span></label>
+          <label class="opt"><input type="radio" name="mode" value="full"><span><b>Оплатить полностью</b><small id="fullPrice">сначала выберите вариант размещения</small></span></label>
+        </div>
+      </div>
+      <div class="hp" aria-hidden="true"><label for="fWeb">Сайт</label><input id="fWeb" name="website" tabindex="-1" autocomplete="off"></div>
       <div class="fld"><label for="fComment">Комментарий</label><textarea id="fComment" name="comment" maxlength="1000" placeholder="Вопросы или пожелания — по желанию"></textarea></div>
-      <label class="consent"><input type="checkbox" id="fConsent" required><span>Я согласна на обработку персональных данных и принимаю <a href="#" class="todo-link">политику конфиденциальности</a></span></label>
+      <label class="consent"><input type="checkbox" id="fConsent" required><span>Я согласна на обработку персональных данных, принимаю <a href="#" class="todo-link">договор-оферту</a> и <a href="#" class="todo-link">политику конфиденциальности</a></span></label>
       <div class="err" id="fErr" role="alert"></div>
-      <button class="btn" type="submit" id="fBtn">Отправить заявку</button>
+      <button class="btn" type="submit" id="fBtn">Перейти к оплате</button>
+      <p class="pay-note">Оплата проходит на защищённой странице ЮKassa. Чек придёт на почту.</p>
       <div class="result" id="fResult" hidden role="status"></div>
     </form>
   </div>
@@ -955,47 +973,103 @@ p.final-lines{display:block;max-width:720px;line-height:1.7}
     new IntersectionObserver(function(es){ atBook = es[0].isIntersecting; upd(); }, {rootMargin:'0px 0px -10% 0px'}).observe(book);
   }
 
-  // Booking form — saves the request only where storage is really available
-  var dbReady = (window.claude && typeof window.claude.use === 'function')
-    ? Promise.all([window.claude.use('db'), window.claude.use('user')]).catch(function(){ return [null,null]; })
-    : Promise.resolve([null,null]);
+  // Booking: every lead goes to Kristina's Telegram, then payment via YooKassa
   var form = document.getElementById('form'), err = document.getElementById('fErr'), btn = document.getElementById('fBtn'), res = document.getElementById('fResult');
-  var FAIL = 'Не удалось отправить заявку через сайт. Пожалуйста, напишите организатору напрямую: ';
+  var fN = document.getElementById('fName'), fC = document.getElementById('fContact'), fE = document.getElementById('fEmail'), fM = document.getElementById('fComment'), hp = document.getElementById('fWeb');
+  var PRICES = { double: [51000, 55000], single: [57000, 61000], friend: [96000, 100000] };
+  var isEarly = Date.now() < EARLY_END.getTime();
+  function fmt(n){ return n.toLocaleString('ru-RU') + ' ₽'; }
+  function payMode(){ var r = form.querySelector('input[name="mode"]:checked'); return r ? r.value : 'prepay'; }
+  function amount(){ if (payMode() === 'prepay') return 10000; var p = PRICES[planSel.value]; return p ? (isEarly ? p[0] : p[1]) : null; }
+  function upd(){
+    var p = PRICES[planSel.value];
+    document.getElementById('fullPrice').textContent = p ? fmt(isEarly ? p[0] : p[1]) + ' — вся сумма сразу' : 'сначала выберите вариант размещения';
+    var a = amount(); if (!btn.disabled) btn.textContent = a ? 'Перейти к оплате ' + fmt(a) : 'Перейти к оплате';
+  }
+  planSel.addEventListener('change', upd);
+  form.querySelectorAll('input[name="mode"]').forEach(function(r){ r.addEventListener('change', upd); });
+  document.querySelectorAll('a[data-plan]').forEach(function(a){ a.addEventListener('click', function(){ setTimeout(upd, 0); }); });
+  upd();
+
+  function data(stage){ return { stage: stage, name: fN.value.trim(), contact: fC.value.trim(), email: fE.value.trim(), plan: planSel.value, mode: payMode(), comment: fM.value.trim(), website: hp.value }; }
+  function post(url, body){
+    return fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+      .then(function(r){ return r.json().catch(function(){ return {}; }).then(function(j){ return { ok: r.ok, status: r.status, j: j }; }); });
+  }
+
+  // Abandoned form: a contact was typed, but the button was not pressed
+  var submitted = false, draftSent = false, idleT;
+  function draftReady(){ var c = fC.value.trim(); return c.replace(/\D/g, '').length >= 6 || /@[A-Za-z0-9_]{3,}/.test(c) || /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(fE.value.trim()); }
+  function sendDraft(){
+    if (submitted || draftSent || !draftReady()) return;
+    draftSent = true;
+    var body = JSON.stringify(data('draft'));
+    var sent = false;
+    try { sent = navigator.sendBeacon && navigator.sendBeacon('/api/lead', new Blob([body], { type: 'application/json' })); } catch (e) {}
+    if (!sent) { try { fetch('/api/lead', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: body, keepalive: true }).catch(function(){}); } catch (e) {} }
+  }
+  document.addEventListener('visibilitychange', function(){ if (document.visibilityState === 'hidden') sendDraft(); });
+  window.addEventListener('pagehide', sendDraft);
+  [fN, fC, fE, fM].forEach(function(el){ el.addEventListener('input', function(){ clearTimeout(idleT); idleT = setTimeout(sendDraft, 180000); }); });
+
+  function showContacts(text){
+    var msg = 'Здравствуйте, Кристина! Хочу на ретрит «Подлинность» 4–7 февраля 2027.\nИмя: ' + fN.value.trim() + '\nКонтакт: ' + fC.value.trim() + '\nВариант: ' + planSel.options[planSel.selectedIndex].text + (fM.value.trim() ? '\nКомментарий: ' + fM.value.trim() : '');
+    res.className = 'result send'; res.hidden = false; res.innerHTML = '';
+    var p = document.createElement('p'); p.textContent = text; res.appendChild(p);
+    var row = document.createElement('div'); row.className = 'send-row';
+    var a1 = document.createElement('a'); a1.className = 'btn'; a1.href = 'https://t.me/kristinaperelyot?text=' + encodeURIComponent(msg); a1.target = '_blank'; a1.rel = 'noopener'; a1.textContent = 'Написать в Telegram'; row.appendChild(a1);
+    var a2 = document.createElement('a'); a2.className = 'btn ghost'; a2.href = 'https://wa.me/79201841261?text=' + encodeURIComponent(msg); a2.target = '_blank'; a2.rel = 'noopener'; a2.textContent = 'Написать в WhatsApp'; row.appendChild(a2);
+    res.appendChild(row);
+    var ph = document.createElement('p'); ph.className = 'send-ph'; ph.appendChild(document.createTextNode('Или позвоните: ')); var t = document.createElement('a'); t.href = 'tel:+79201841261'; t.textContent = '+7 920 184-12-61'; ph.appendChild(t); res.appendChild(ph);
+  }
+  function showOk(text){ res.className = 'result ok'; res.hidden = false; res.textContent = text; }
+
   form.addEventListener('submit', function(e){
     e.preventDefault(); err.textContent = ''; res.hidden = true;
-    var fN=document.getElementById('fName'), fC=document.getElementById('fContact'), fM=document.getElementById('fComment');
-    var name = fN.value.trim(), contact = fC.value.trim();
+    var name = fN.value.trim(), contact = fC.value.trim(), email = fE.value.trim();
     if (!name) { err.textContent = 'Укажите, пожалуйста, имя.'; fN.focus(); return; }
-    if (contact.length < 4) { err.textContent = 'Укажите телефон или Telegram, чтобы организатор мог с вами связаться.'; fC.focus(); return; }
-    if (!document.getElementById('fConsent').checked) { err.textContent = 'Нужно согласие на обработку персональных данных.'; return; }
-    btn.disabled = true; btn.textContent = 'Отправляем…';
-    var payload = { name: name, contact: contact, plan: planSel.value, planLabel: planSel.options[planSel.selectedIndex].text, comment: fM.value.trim(), createdAt: new Date().toISOString(), source: 'site' };
-    dbReady.then(function(r){
-      var db = r[0], user = r[1];
-      if (!db || !user) throw new Error('no-db');
-      return user.id().then(function(uid){
-        if (!uid) throw new Error('no-user');
-        return db.collection('leads/' + uid + '/requests').add(payload);
-      });
-    }).then(function(){
-      res.className = 'result ok'; res.hidden = false;
-      res.textContent = 'Спасибо, ' + name + '! Заявка сохранена. Организатор свяжется с вами и пришлёт инструкции по предоплате 10 000 ₽.';
-      form.reset(); planSel.value = 'undecided';
-      btn.textContent = 'Заявка отправлена';
+    if (contact.length < 4) { err.textContent = 'Укажите телефон или Telegram, чтобы Кристина могла с вами связаться.'; fC.focus(); return; }
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { err.textContent = 'Укажите почту — на неё придёт чек об оплате.'; fE.focus(); return; }
+    if (payMode() === 'full' && !amount()) { err.textContent = 'Для полной оплаты выберите вариант размещения.'; planSel.focus(); return; }
+    if (!document.getElementById('fConsent').checked) { err.textContent = 'Нужно ваше согласие с условиями и обработкой персональных данных.'; return; }
+    submitted = true; clearTimeout(idleT);
+    btn.disabled = true; btn.textContent = 'Готовим оплату…';
+    var d = data('checkout');
+    var leadP = post('/api/lead', d).catch(function(){ return { ok: false }; });
+    post('/api/pay', d).then(function(r){
+      if (!(r.ok && r.j && r.j.url)) throw new Error('pay');
+      try { sessionStorage.setItem('podlPayId', r.j.id); } catch (e2) {}
+      return leadP.then(function(){ window.location.href = r.j.url; });
     }).catch(function(){
-      var msg = 'Здравствуйте, Кристина! Хочу на ретрит «Подлинность» 4–7 февраля 2027.\nИмя: ' + name + '\nКонтакт: ' + contact + '\nВариант: ' + payload.planLabel + (payload.comment ? '\nКомментарий: ' + payload.comment : '');
-      var tg = 'https://t.me/kristinaperelyot?text=' + encodeURIComponent(msg);
-      var wa = 'https://wa.me/79201841261?text=' + encodeURIComponent(msg);
-      res.className = 'result send'; res.hidden = false; res.innerHTML = '';
-      var p = document.createElement('p'); p.textContent = 'Почти готово! Отправьте заявку Кристине — сообщение уже составлено, останется нажать «Отправить».'; res.appendChild(p);
-      var row = document.createElement('div'); row.className = 'send-row';
-      var a1 = document.createElement('a'); a1.className = 'btn'; a1.href = tg; a1.target = '_blank'; a1.rel = 'noopener'; a1.textContent = 'Отправить в Telegram'; row.appendChild(a1);
-      var a2 = document.createElement('a'); a2.className = 'btn ghost'; a2.href = wa; a2.target = '_blank'; a2.rel = 'noopener'; a2.textContent = 'Отправить в WhatsApp'; row.appendChild(a2);
-      res.appendChild(row);
-      var ph = document.createElement('p'); ph.className = 'send-ph'; ph.appendChild(document.createTextNode('Или позвоните: ')); var t = document.createElement('a'); t.href = 'tel:+79201841261'; t.textContent = '+7 920 184-12-61'; ph.appendChild(t); res.appendChild(ph);
-      btn.disabled = false; btn.textContent = 'Отправить заявку';
+      leadP.then(function(l){
+        btn.disabled = false; upd();
+        if (l && l.ok) {
+          showOk('Спасибо, ' + name + '! Ваша заявка отправлена Кристине. Онлайн-оплата сейчас недоступна — Кристина свяжется с вами и поможет оплатить бронь.');
+          btn.textContent = 'Заявка отправлена';
+        } else {
+          showContacts('Не получилось перейти к оплате. Напишите Кристине — сообщение с вашими данными уже составлено, останется нажать «Отправить».');
+        }
+      });
     });
   });
+
+  // Return from the YooKassa payment page
+  if (/[?&]pay=return/.test(location.search)) {
+    try { history.replaceState(null, '', location.pathname + '#booking'); } catch (e) {}
+    var pid = null; try { pid = sessionStorage.getItem('podlPayId'); } catch (e) {}
+    res.className = 'result send'; res.hidden = false; res.textContent = 'Проверяем оплату…';
+    setTimeout(function(){ document.getElementById('booking').scrollIntoView(); }, 300);
+    var tries = 0;
+    (function check(){
+      if (!pid) { res.textContent = 'Если оплата прошла, Кристина получит вашу бронь и свяжется с вами. Остались вопросы — напишите ей в Telegram @kristinaperelyot.'; return; }
+      fetch('/api/status?id=' + encodeURIComponent(pid)).then(function(r){ return r.json(); }).then(function(s){
+        if (s.status === 'succeeded') { showOk('Оплата прошла! Место на ретрите за вами. Кристина свяжется с вами в ближайшее время. Чек придёт на почту.'); try { sessionStorage.removeItem('podlPayId'); } catch (e) {} }
+        else if (s.status === 'canceled') { showContacts('Оплата не прошла. Можно попробовать ещё раз через форму или написать Кристине — она поможет.'); }
+        else if (++tries < 6) { setTimeout(check, 2500); }
+        else { res.className = 'result send'; res.textContent = 'Платёж ещё обрабатывается. Как только он пройдёт, Кристина получит вашу бронь и свяжется с вами.'; }
+      }).catch(function(){ res.textContent = 'Не удалось проверить оплату. Если деньги списались — бронь за вами, Кристина свяжется с вами.'; });
+    })();
+  }
 })();
 </script>
 </body>
