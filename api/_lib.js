@@ -6,7 +6,7 @@ const PREPAY = 10000;
 
 const PLANS = {
   double: { label: 'Двухместное проживание', early: 51000, late: 55000 },
-  single: { label: 'Одноместное проживание', early: 57000, late: 61000 },
+  single: { label: 'Одноместное проживание', early: 65000, late: 69000 },
   friend: { label: 'С подругой (за двоих)', early: 96000, late: 100000 },
   undecided: { label: 'Пока не решила', early: null, late: null },
 };
