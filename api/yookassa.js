@@ -1,6 +1,7 @@
 // Приёмник уведомлений ЮKassa. Статус платежа всегда перепроверяется прямым
 // запросом к ЮKassa, поэтому подделать «оплату» запросом на этот адрес нельзя.
 const { PLANS, rub, ykGetPayment, tgSend } = require('./_lib');
+const { sendBuyerLetter } = require('./_mail');
 
 const CANCEL_REASONS = {
   expired_on_confirmation: 'не оплатила вовремя (ушла со страницы оплаты)',
@@ -24,8 +25,16 @@ module.exports = async (req, res) => {
     const m = p.metadata || {};
     const amount = rub(Number(p.amount && p.amount.value) || 0);
     const plan = (PLANS[m.plan] || PLANS.undecided).label;
-    let title;
+    let title, mailNote = '';
     if (p.status === 'succeeded' && p.paid) {
+      try {
+        const r = await sendBuyerLetter(p);
+        mailNote = r === 'sent' ? 'Письмо-подтверждение ей отправлено ✓'
+          : r === 'skipped:no_email' ? 'Письмо не отправлено: нет почты' : '';
+      } catch (e) {
+        console.error('mail error', e);
+        mailNote = 'Письмо-подтверждение НЕ ушло (ошибка почты)';
+      }
       title = (m.test === '1' ? 'ТЕСТ (не настоящая бронь): ' : '') + (m.mode === 'full' ? 'ОПЛАЧЕНО участие' : 'ОПЛАЧЕНА бронь') + ' — ретрит «Подлинность»';
     } else if (p.status === 'canceled') {
       const r = p.cancellation_details && p.cancellation_details.reason;
@@ -44,7 +53,7 @@ module.exports = async (req, res) => {
       'Комментарий: ' + (m.comment || '-'),
       '',
       'Платёж ЮKassa: ' + p.id,
-    ].join('\n');
+    ].concat(mailNote ? [mailNote] : []).join('\n');
     await tgSend(text);
     return res.status(200).json({ ok: true });
   } catch (e) {
