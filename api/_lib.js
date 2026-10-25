@@ -52,3 +52,23 @@ async function tgSend(text) {
 }
 
 module.exports = { PLANS, PREPAY, planPrice, rub, ykAuth, ykGetPayment, tgSend };
+
+// Найти платёж по номеру заказа (metadata.order) среди платежей за последние 3 дня.
+async function ykFindByOrder(order) {
+  const auth = ykAuth();
+  if (!auth) throw new Error('not_configured');
+  const since = new Date(Date.now() - 3 * 86400000).toISOString();
+  let cursor = '';
+  for (let page = 0; page < 5; page++) {
+    const u = 'https://api.yookassa.ru/v3/payments?limit=100&created_at.gte=' + encodeURIComponent(since) + (cursor ? '&cursor=' + encodeURIComponent(cursor) : '');
+    const r = await fetch(u, { headers: { Authorization: auth } });
+    if (!r.ok) throw new Error('yookassa_list_' + r.status);
+    const d = await r.json();
+    const hit = (d.items || []).find(p => p.metadata && p.metadata.order === order);
+    if (hit) return hit;
+    if (!d.next_cursor) return null;
+    cursor = d.next_cursor;
+  }
+  return null;
+}
+module.exports.ykFindByOrder = ykFindByOrder;

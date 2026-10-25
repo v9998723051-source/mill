@@ -1091,14 +1091,15 @@ p.final-lines{display:block;max-width:720px;line-height:1.7}
 
   // Return from the YooKassa payment page
   if (/[?&]pay=return/.test(location.search)) {
+    var ordm = location.search.match(/[?&]order=([0-9a-f-]{30,40})/i); var order = ordm ? ordm[1] : '';
     try { history.replaceState(null, '', location.pathname + '#booking'); } catch (e) {}
     var pid = null; try { pid = sessionStorage.getItem('podlPayId'); } catch (e) {}
     res.className = 'result send'; res.hidden = false; res.textContent = 'Проверяем оплату…';
     setTimeout(function(){ document.getElementById('booking').scrollIntoView(); }, 300);
     var tries = 0;
     (function check(){
-      if (!pid) { res.textContent = 'Если оплата прошла, Кристина получит вашу бронь и свяжется с вами. Остались вопросы — напишите ей в Telegram @kristinaperelyot.'; return; }
-      fetch('/api/status?id=' + encodeURIComponent(pid)).then(function(r){ return r.json(); }).then(function(s){
+      if (!pid && !order) { res.textContent = 'Если оплата прошла, Кристина получит вашу бронь и свяжется с вами. Остались вопросы — напишите ей в Telegram @kristinaperelyot.'; return; }
+      fetch(order ? '/api/status?order=' + encodeURIComponent(order) : '/api/status?id=' + encodeURIComponent(pid)).then(function(r){ return r.json(); }).then(function(s){
         if (s.status === 'succeeded') { showOk('Оплата прошла! Место на ретрите за вами. Кристина свяжется с вами в ближайшее время. Чек придёт на почту.'); try { sessionStorage.removeItem('podlPayId'); } catch (e) {} }
         else if (s.status === 'canceled') { showContacts('Оплата не прошла. Можно попробовать ещё раз через форму или написать Кристине — она поможет.'); }
         else if (++tries < 6) { setTimeout(check, 2500); }

@@ -31,12 +31,13 @@ module.exports = async (req, res) => {
     ? 'Оплата участия в ретрите «Подлинность», 4–7 февраля 2027'
     : 'Бронирование места на ретрите «Подлинность», 4–7 февраля 2027';
 
+  const order = crypto.randomUUID();
   const body = {
     amount: { value, currency: 'RUB' },
     capture: true,
-    confirmation: { type: 'redirect', return_url: SITE + '/?pay=return#booking' },
+    confirmation: { type: 'redirect', return_url: SITE + '/?pay=return&order=' + order + '#booking' },
     description: what.slice(0, 128),
-    metadata: { name, contact, email, plan, mode, comment: comment || '-', test: isTest ? '1' : '0' },
+    metadata: { name, contact, email, plan, mode, comment: comment || '-', test: isTest ? '1' : '0', order },
   };
 
   if (process.env.YK_RECEIPT === '1') {

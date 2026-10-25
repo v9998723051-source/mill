@@ -21,6 +21,17 @@ module.exports = async (req, res) => {
       'Режим: ' + (d.test ? 'ТЕСТОВЫЙ (деньги не списываются)' : 'боевой — настоящие оплаты'),
       'Чеки от ЮKassa: ' + (d.fiscalization_enabled || (d.fiscalization && d.fiscalization.enabled) ? 'включены' : 'не видно в настройках'),
     ];
+    const code = String((req.query && req.query.code) || '');
+    if (process.env.YK_TEST_CODE && code === process.env.YK_TEST_CODE) {
+      const pr = await fetch('https://api.yookassa.ru/v3/payments?limit=5', { headers: { Authorization: auth } });
+      const pd = await pr.json().catch(() => ({}));
+      lines.push('', 'Последние платежи:');
+      (pd.items || []).forEach(p => {
+        lines.push('— ' + new Date(p.created_at).toLocaleString('ru-RU', { timeZone: 'Asia/Ho_Chi_Minh' }) + ' · ' + p.amount.value + ' ₽ · статус: ' + p.status +
+          ' · чек: ' + (p.receipt_registration || 'не отправлялся') + ((p.metadata && p.metadata.test === '1') ? ' · ТЕСТ' : ''));
+      });
+      if (!(pd.items || []).length) lines.push('платежей пока нет');
+    }
     return res.status(200).send(lines.join('\n'));
   } catch (e) {
     return res.status(200).send('Не удалось связаться с ЮKassa: ' + String(e.message || e));
