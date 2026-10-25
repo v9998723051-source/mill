@@ -27,7 +27,7 @@ module.exports = async (req, res) => {
 
   const sum = mode === 'full' ? planPrice(plan) : PREPAY;
   const lines = [
-    TITLES[stage] + ' — ретрит «Подлинность»',
+    (process.env.YK_TEST_CODE && String(b.test || '') === process.env.YK_TEST_CODE ? 'ТЕСТ: ' : '') + TITLES[stage] + ' — ретрит «Подлинность»',
     '',
     'Имя: ' + (name || '-'),
     'Контакт: ' + (contact || '-'),

@@ -26,10 +26,10 @@ module.exports = async (req, res) => {
     const plan = (PLANS[m.plan] || PLANS.undecided).label;
     let title;
     if (p.status === 'succeeded' && p.paid) {
-      title = (m.mode === 'full' ? 'ОПЛАЧЕНО участие' : 'ОПЛАЧЕНА бронь') + ' — ретрит «Подлинность»';
+      title = (m.test === '1' ? 'ТЕСТ (не настоящая бронь): ' : '') + (m.mode === 'full' ? 'ОПЛАЧЕНО участие' : 'ОПЛАЧЕНА бронь') + ' — ретрит «Подлинность»';
     } else if (p.status === 'canceled') {
       const r = p.cancellation_details && p.cancellation_details.reason;
-      title = 'Оплата НЕ прошла — ' + (CANCEL_REASONS[r] || r || 'платёж отменён') + '. Стоит написать ей.';
+      title = (m.test === '1' ? 'ТЕСТ: ' : '') + 'Оплата НЕ прошла — ' + (CANCEL_REASONS[r] || r || 'платёж отменён') + '. Стоит написать ей.';
     } else {
       return res.status(200).json({ ok: true, status: p.status });
     }

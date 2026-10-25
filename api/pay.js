@@ -23,7 +23,9 @@ module.exports = async (req, res) => {
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return res.status(400).json({ error: 'email' });
   if (mode === 'full' && !planPrice(plan)) return res.status(400).json({ error: 'plan' });
 
-  const amount = mode === 'full' ? planPrice(plan) : PREPAY;
+  // Тестовая оплата 100 ₽ — только по секретному коду из настроек (YK_TEST_CODE)
+  const isTest = !!process.env.YK_TEST_CODE && String(b.test || '') === process.env.YK_TEST_CODE;
+  const amount = isTest ? 100 : (mode === 'full' ? planPrice(plan) : PREPAY);
   const value = amount.toFixed(2);
   const what = mode === 'full'
     ? 'Оплата участия в ретрите «Подлинность», 4–7 февраля 2027'
@@ -34,7 +36,7 @@ module.exports = async (req, res) => {
     capture: true,
     confirmation: { type: 'redirect', return_url: SITE + '/?pay=return#booking' },
     description: what.slice(0, 128),
-    metadata: { name, contact, email, plan, mode, comment: comment || '-' },
+    metadata: { name, contact, email, plan, mode, comment: comment || '-', test: isTest ? '1' : '0' },
   };
 
   if (process.env.YK_RECEIPT === '1') {

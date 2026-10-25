@@ -1011,11 +1011,12 @@ p.final-lines{display:block;max-width:720px;line-height:1.7}
   // Booking: every lead goes to Kristina's Telegram, then payment via YooKassa
   var form = document.getElementById('form'), err = document.getElementById('fErr'), btn = document.getElementById('fBtn'), res = document.getElementById('fResult');
   var fN = document.getElementById('fName'), fC = document.getElementById('fContact'), fE = document.getElementById('fEmail'), fM = document.getElementById('fComment'), hp = document.getElementById('fWeb');
+  var TEST = (location.search.match(/[?&]test=([A-Za-z0-9]+)/) || [])[1] || '';
   var PRICES = { double: [51000, 55000], single: [65000, 69000], friend: [96000, 100000] };
   var isEarly = Date.now() < EARLY_END.getTime();
   function fmt(n){ return n.toLocaleString('ru-RU') + ' ₽'; }
   function payMode(){ var r = form.querySelector('input[name="mode"]:checked'); return r ? r.value : 'prepay'; }
-  function amount(){ if (payMode() === 'prepay') return 10000; var p = PRICES[planSel.value]; return p ? (isEarly ? p[0] : p[1]) : null; }
+  function amount(){ if (TEST) return 100; if (payMode() === 'prepay') return 10000; var p = PRICES[planSel.value]; return p ? (isEarly ? p[0] : p[1]) : null; }
   function upd(){
     var p = PRICES[planSel.value];
     document.getElementById('fullPrice').textContent = p ? fmt(isEarly ? p[0] : p[1]) + ' — вся сумма сразу' : 'сначала выберите вариант размещения';
@@ -1026,7 +1027,7 @@ p.final-lines{display:block;max-width:720px;line-height:1.7}
   document.querySelectorAll('a[data-plan]').forEach(function(a){ a.addEventListener('click', function(){ setTimeout(upd, 0); }); });
   upd();
 
-  function data(stage){ return { stage: stage, name: fN.value.trim(), contact: fC.value.trim(), email: fE.value.trim(), plan: planSel.value, mode: payMode(), comment: fM.value.trim(), website: hp.value }; }
+  function data(stage){ return { stage: stage, name: fN.value.trim(), contact: fC.value.trim(), email: fE.value.trim(), plan: planSel.value, mode: payMode(), comment: fM.value.trim(), website: hp.value, test: TEST }; }
   function post(url, body){
     return fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
       .then(function(r){ return r.json().catch(function(){ return {}; }).then(function(j){ return { ok: r.ok, status: r.status, j: j }; }); });
