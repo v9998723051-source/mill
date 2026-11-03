@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Твой первый проект с Claude — бесплатный урок</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F7F5FF; --card:#fff; --ink:#1E1840; --ink2:#4A4270; --mute:#8A82B0;
+  --v:#6C4CF1; --v2:#5B3FE0; --vl:#EEE9FF; --pink:#FFE6F1; --pinkd:#B0306E;
+  --mint:#E2F7EE; --mintd:#1C7A55; --sky:#E4EFFF; --skyd:#2D5FC0; --sun:#FFF4DA; --sund:#9A6A00;
+  --r:22px; --sh:0 10px 30px rgba(70,50,150,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:Manrope,system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:17px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0;z-index:-1;background:
+ radial-gradient(600px 400px at 0% 0%,#E6DEFF 0,transparent 70%),
+ radial-gradient(500px 400px at 100% 30%,#FFE3F0 0,transparent 70%),
+ radial-gradient(600px 500px at 30% 100%,#DDF0FF 0,transparent 70%)}
+h1,h2,h3{font-family:Unbounded,Manrope,sans-serif;line-height:1.15;letter-spacing:-.3px}
+h1{font-size:clamp(30px,7vw,52px)}
+h2{font-size:clamp(24px,5.4vw,36px);margin-bottom:12px}
+h3{font-size:19px;margin-bottom:8px}
+p{margin-bottom:12px} a{color:var(--v2)}
+.wrap{max-width:780px;margin:0 auto;padding:0 18px}
+.v{color:var(--v)}
+/* top bar */
+.top{position:sticky;top:0;z-index:20;background:rgba(247,245,255,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid #ECE7FB}
+.top .wrap{display:flex;align-items:center;gap:12px;height:60px}
+.brand{font-family:Unbounded;font-size:14px;font-weight:700;text-decoration:none;color:var(--ink);white-space:nowrap}
+.brand b{color:var(--v)}
+.prog{flex:1;height:8px;background:#E7E1FA;border-radius:9px;overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,#8B6CFF,#6C4CF1);border-radius:9px;transition:width .5s}
+.progT{font-size:13px;font-weight:700;color:var(--mute);white-space:nowrap}
+.menuBtn{border:0;background:var(--vl);color:var(--v2);font:700 14px Manrope;padding:9px 13px;border-radius:12px;cursor:pointer}
+.drawer{display:none;position:fixed;inset:60px 0 auto 0;z-index:19;background:#fff;box-shadow:0 20px 40px rgba(70,50,150,.15);border-radius:0 0 24px 24px}
+.drawer.on{display:block}
+.drawer a{display:flex;gap:12px;align-items:center;padding:14px 22px;text-decoration:none;color:var(--ink);font-weight:700;border-top:1px solid #F1EDFB}
+.drawer a .dn{width:30px;height:30px;border-radius:10px;background:var(--vl);color:var(--v2);display:flex;align-items:center;justify-content:center;font-size:14px;flex:none}
+.drawer a.done .dn{background:var(--v);color:#fff}
+/* views */
+.view{display:none;padding:26px 0 60px;animation:in .45s ease}
+.view.on{display:block}
+@keyframes in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.card{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:22px;margin:16px 0}
+.badge{display:inline-flex;gap:8px;align-items:center;font-size:13px;font-weight:800;color:var(--v2);background:var(--vl);padding:7px 13px;border-radius:999px;margin-bottom:14px}
+.lead{font-size:18px;color:var(--ink2)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:0;cursor:pointer;font:800 17px Manrope;padding:16px 26px;border-radius:16px;background:var(--v);color:#fff;text-decoration:none;box-shadow:0 12px 28px rgba(108,76,241,.32);transition:transform .15s,box-shadow .15s}
+.btn:active{transform:scale(.97)}
+.btn.ghost{background:#fff;color:var(--v2);box-shadow:var(--sh)}
+.btn.small{padding:10px 16px;font-size:15px;border-radius:12px;box-shadow:none}
+.row{display:flex;gap:12px;flex-wrap:wrap}
+/* hero */
+.hero{text-align:center;padding-top:10px}
+.hero .lead{max-width:560px;margin:14px auto 22px}
+.videoBox{position:relative;max-width:360px;margin:0 auto 22px;border-radius:28px;overflow:hidden;box-shadow:0 24px 60px rgba(70,50,150,.22);background:#EDE8FF;aspect-ratio:9/16}
+.videoBox video{width:100%;height:100%;display:block;object-fit:cover;background:#EDE8FF}
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:22px 0}
+.fact{background:#fff;border-radius:18px;padding:14px 10px;box-shadow:var(--sh);text-align:center}
+.fact b{display:block;font-family:Unbounded;font-size:20px;color:var(--v)}
+.fact span{font-size:13px;color:var(--ink2);font-weight:600}
+.mods{display:grid;gap:10px;margin-top:16px;text-align:left}
+.mod{display:flex;align-items:center;gap:14px;background:#fff;border-radius:18px;padding:14px 16px;box-shadow:var(--sh);text-decoration:none;color:var(--ink)}
+.mod .n{width:42px;height:42px;border-radius:14px;background:var(--vl);color:var(--v2);font-family:Unbounded;display:flex;align-items:center;justify-content:center;flex:none}
+.mod.done .n{background:var(--v);color:#fff}
+.mod b{display:block;font-size:16px}
+.mod small{color:var(--mute);font-weight:600}
+/* flow */
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;margin:8px 0}
+.flow span{background:var(--vl);color:var(--v2);font-weight:800;font-size:14px;padding:9px 13px;border-radius:12px}
+.flow span:nth-child(odd){}
+.flow em{font-style:normal;color:var(--mute);font-weight:800}
+.flow span.fin{background:var(--v);color:#fff}
+/* gallery */
+.gal{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.gal figure{background:#fff;border-radius:16px;overflow:hidden;box-shadow:var(--sh)}
+.gal img{width:100%;aspect-ratio:540/590;object-fit:cover;display:block}
+.gal figcaption{font-size:12.5px;font-weight:700;padding:8px 9px;line-height:1.3}
+@media(min-width:640px){.gal{grid-template-columns:repeat(4,1fr)}}
+/* steps */
+.steps{counter-reset:s;display:grid;gap:10px;margin:12px 0}
+.steps li{list-style:none;position:relative;padding:14px 14px 14px 58px;background:#FAF9FF;border:1px solid #EEEAFB;border-radius:16px}
+.steps li::before{counter-increment:s;content:counter(s);position:absolute;left:14px;top:12px;width:32px;height:32px;border-radius:10px;background:var(--v);color:#fff;font:700 15px Unbounded;display:flex;align-items:center;justify-content:center}
+.steps li b{display:block}
+/* prompt */
+.prompt{position:relative;background:#FBFAFF;border:1.5px dashed #CFC4FA;border-radius:18px;padding:16px 16px 62px;margin:12px 0;font-size:16px;white-space:pre-wrap}
+.prompt .ptitle{font-weight:800;color:var(--v2);font-size:13px;text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px;white-space:normal}
+.copy{position:absolute;right:12px;bottom:12px;border:0;cursor:pointer;background:var(--v);color:#fff;font:800 14px Manrope;padding:10px 15px;border-radius:12px}
+.copy.ok{background:var(--mintd)}
+/* compare */
+.cmp{display:grid;gap:12px}
+@media(min-width:640px){.cmp{grid-template-columns:1fr 1.6fr}}
+.bad,.good{border-radius:18px;padding:16px}
+.bad{background:#FFF0F4}.good{background:#EFFAF4}
+.bad b{color:#C2335E}.good b{color:#1C8A5E}
+.q{font-weight:700;margin-top:6px}
+.f1{background:#E9E2FF;border-radius:6px;padding:0 3px}.f2{background:#FFE3F0;border-radius:6px;padding:0 3px}.f3{background:#DDF6EC;border-radius:6px;padding:0 3px}.f4{background:#E2EEFF;border-radius:6px;padding:0 3px}.f5{background:#FFF1CF;border-radius:6px;padding:0 3px}
+.formula{display:grid;gap:8px;margin:12px 0}
+.formula div{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:14px;font-size:15.5px}
+.formula div b{flex:none;min-width:112px}
+/* action / result / hint */
+.act{background:linear-gradient(135deg,#6C4CF1,#8A6CFF);color:#fff;border-radius:var(--r);padding:22px;margin:18px 0;box-shadow:0 16px 36px rgba(108,76,241,.3)}
+.act h3{color:#fff}.act p{color:#F1EDFF}
+.act .prompt{background:rgba(255,255,255,.96);color:var(--ink);border-color:#fff}
+.res{background:var(--mint);border-radius:var(--r);padding:16px 18px;margin:14px 0}
+.res b{color:var(--mintd)}
+details{background:#fff;border-radius:18px;box-shadow:var(--sh);margin:10px 0;overflow:hidden}
+summary{cursor:pointer;list-style:none;padding:16px 18px;font-weight:800;display:flex;justify-content:space-between;gap:10px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";color:var(--v);font-size:22px;line-height:1}
+details[open] summary::after{content:"–"}
+details .in{padding:0 18px 16px;color:var(--ink2)}
+details .in li{margin:0 0 8px 18px}
+.note{background:var(--sun);border-radius:16px;padding:14px 16px;font-size:15.5px;margin:12px 0}
+.note b{color:var(--sund)}
+.info{background:var(--sky);border-radius:16px;padding:14px 16px;font-size:15.5px;margin:12px 0}
+/* table */
+.plans{display:grid;gap:12px}
+@media(min-width:640px){.plans{grid-template-columns:1fr 1fr}}
+.plan{border-radius:18px;padding:16px;background:#FAF9FF;border:1px solid #EEEAFB}
+.plan h3{font-size:16px}
+.plan ul{margin-left:18px;font-size:15.5px}
+.plan.pro{background:#F4F0FF;border-color:#DCD2FF}
+/* phone schema */
+.schema{display:grid;gap:16px;align-items:center}
+@media(min-width:640px){.schema{grid-template-columns:260px 1fr}}
+.phone{width:240px;height:440px;margin:0 auto;border-radius:36px;background:#fff;border:10px solid #2B2550;position:relative;overflow:hidden;box-shadow:0 18px 40px rgba(40,30,90,.25)}
+.phone .lbl{position:absolute;top:8px;right:10px;font-size:10px;font-weight:800;letter-spacing:1px;color:#A9A0D6}
+.ph-top{display:flex;align-items:center;gap:8px;padding:22px 14px 10px;font-weight:800;font-size:13px}
+.ph-top i{width:18px;height:2px;background:#2B2550;box-shadow:0 5px 0 #2B2550,0 -5px 0 #2B2550;display:inline-block;margin:6px 4px}
+.ph-msg{margin:10px 12px;padding:9px 11px;border-radius:14px;font-size:11.5px;line-height:1.35}
+.ph-msg.u{background:var(--v);color:#fff;margin-left:48px;border-bottom-right-radius:4px}
+.ph-msg.c{background:#F2EFFC;margin-right:40px;border-bottom-left-radius:4px}
+.ph-art{margin:6px 12px;border:1.5px solid #E3DDFA;border-radius:12px;padding:9px;font-size:11px;font-weight:700;display:flex;gap:8px;align-items:center}
+.ph-art span{width:28px;height:28px;border-radius:8px;background:var(--vl);display:inline-flex;align-items:center;justify-content:center}
+.ph-in{position:absolute;left:10px;right:10px;bottom:12px;border:1.5px solid #E3DDFA;border-radius:18px;padding:10px 12px;font-size:11.5px;color:var(--mute);display:flex;justify-content:space-between;align-items:center}
+.ph-in em{font-style:normal;width:24px;height:24px;border-radius:50%;background:var(--v);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px}
+.mk{position:absolute;width:22px;height:22px;border-radius:50%;background:#E0489A;color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 3px #fff}
+.legend{display:grid;gap:8px;font-size:15.5px}
+.legend div{display:flex;gap:10px;align-items:flex-start}
+.legend i{font-style:normal;flex:none;width:24px;height:24px;border-radius:50%;background:#E0489A;color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;margin-top:1px}
+/* skills */
+.sk{border-radius:var(--r);background:#fff;box-shadow:var(--sh);padding:18px;margin:12px 0}
+.sk .h{display:flex;gap:12px;align-items:center;margin-bottom:10px}
+.sk .ic{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;flex:none}
+.sk dl{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:15.5px}
+.sk dt{font-weight:800;color:var(--mute)}
+.sk dd{margin:0}
+.sk code,.mono{font-family:ui-monospace,Menlo,monospace;font-size:13.5px;background:var(--vl);padding:2px 6px;border-radius:6px;word-break:break-all}
+/* tabs */
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}
+.tab{border:2px solid transparent;background:#fff;box-shadow:var(--sh);border-radius:18px;padding:14px 8px;cursor:pointer;font:800 15px Manrope;color:var(--ink);text-align:center;position:relative}
+.tab small{display:block;font-weight:600;color:var(--mute);font-size:12px;margin-top:2px}
+.tab.on{border-color:var(--v);color:var(--v2)}
+.tab .rec{position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:#E0489A;color:#fff;font-size:10.5px;padding:3px 8px;border-radius:999px;white-space:nowrap}
+.pane{display:none}.pane.on{display:block;animation:in .35s ease}
+/* mini demo previews */
+.demo{border-radius:18px;overflow:hidden;box-shadow:0 12px 30px rgba(70,50,150,.15);margin:12px 0;background:#fff;font-size:13px}
+.demo .cap{font-size:11px;font-weight:800;letter-spacing:1px;color:#A9A0D6;padding:8px 12px;background:#FAF9FF;border-bottom:1px solid #F1EDFB}
+.cof-h{background:linear-gradient(135deg,#FFF4E8,#FFE6F1);padding:22px 18px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.cof-h h4{font:700 20px Unbounded;color:#5A2E1E}
+.cof-h p{margin:4px 0 10px;color:#7A4A38;font-size:13px}
+.cof-b{background:#5A2E1E;color:#fff;border-radius:10px;padding:7px 12px;font-weight:800;font-size:12px;display:inline-block}
+.cup{width:70px;height:70px;flex:none}
+.cof-m{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:12px}
+.cof-m div{background:#FFF8F2;border-radius:10px;padding:8px;display:flex;justify-content:space-between;font-weight:700}
+.gm{height:170px;background:linear-gradient(#2E2468,#6C4CF1);position:relative;color:#fff}
+.gm .sc{position:absolute;top:10px;left:12px;font-weight:800}
+.gm .lv{position:absolute;top:10px;right:12px}
+.gm .st{position:absolute;font-size:20px}
+.gm .bk{position:absolute;bottom:12px;left:42%;width:60px;height:16px;border-radius:0 0 14px 14px;background:#FFD34D}
+.bu{padding:12px;display:grid;gap:8px}
+.bu .r{display:flex;justify-content:space-between;align-items:center;font-weight:700}
+.bu .bar{height:8px;border-radius:6px;background:#EEE9FF;overflow:hidden}.bu .bar i{display:block;height:100%;background:var(--v)}
+.bu .tot{background:var(--mint);border-radius:10px;padding:10px;font-weight:800;color:var(--mintd);display:flex;justify-content:space-between}
+/* nav */
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:26px}
+.nav .btn{flex:1}
+.check{display:flex;gap:12px;align-items:center;background:#fff;border-radius:18px;padding:16px 18px;box-shadow:var(--sh);margin-top:20px;cursor:pointer;font-weight:800;user-select:none}
+.check input{width:24px;height:24px;accent-color:var(--v);flex:none}
+/* dirs */
+.dirs{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.dir{background:#fff;border-radius:18px;padding:14px;box-shadow:var(--sh)}
+.dir b{display:block;margin:6px 0 2px}
+.dir span{font-size:14px;color:var(--ink2)}
+.dir .e{font-size:22px}
+/* congrats */
+.overlay{position:fixed;inset:0;z-index:40;background:rgba(30,24,64,.45);display:none;align-items:center;justify-content:center;padding:18px}
+.overlay.on{display:flex}
+.cong{background:#fff;border-radius:28px;padding:30px 22px;max-width:440px;text-align:center;animation:pop .45s cubic-bezier(.2,1.4,.4,1)}
+@keyframes pop{from{transform:scale(.7);opacity:0}to{transform:none;opacity:1}}
+.cong .big{font-size:56px}
+.cong h2{font-size:24px;margin:10px 0}
+.cong .row{justify-content:center;margin-top:16px}
+.conf{position:fixed;top:-20px;width:10px;height:14px;z-index:41;border-radius:3px;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+.links li{margin:0 0 10px 18px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(120px);background:#2B2550;color:#fff;padding:12px 18px;border-radius:14px;font-weight:700;z-index:50;transition:transform .3s,visibility .3s;max-width:90vw;text-align:center;visibility:hidden}
+.toast.on{visibility:visible}
+.toast.on{transform:translateX(-50%)}
+footer{text-align:center;color:var(--mute);font-size:13.5px;padding:10px 0 40px}
+</style>
+</head>
+<body>
+
+<header class="top"><div class="wrap">
+  <a class="brand" href="#start">Первый проект <b>с Claude</b></a>
+  <div class="prog" aria-label="Прогресс"><i id="progBar"></i></div>
+  <span class="progT" id="progT">0/5</span>
+  <button class="menuBtn" id="menuBtn" aria-expanded="false">Шаги</button>
+</div></header>
+<nav class="drawer" id="drawer">
+  <a href="#start"><span class="dn">★</span>Начало и видео</a>
+  <a href="#m1" data-m="1"><span class="dn">1</span>Знакомься, Claude</a>
+  <a href="#m2" data-m="2"><span class="dn">2</span>Как писать промпты</a>
+  <a href="#m3" data-m="3"><span class="dn">3</span>Skills — навыки</a>
+  <a href="#m4" data-m="4"><span class="dn">4</span>Создай первый проект</a>
+  <a href="#m5" data-m="5"><span class="dn">5</span>Что дальше</a>
+  <a href="#links"><span class="dn">i</span>Справочник и шпаргалка</a>
+</nav>
+
+<main class="wrap">
+
+<!-- ================= START ================= -->
+<section class="view" id="start">
+  <div class="hero">
+    <span class="badge">Бесплатный урок · ≈ 25 минут</span>
+    <h1>Твой первый проект <span class="v">с Claude</span></h1>
+    <p class="lead">Пошаговый урок: от первого запроса до собственного сайта или приложения. Регистрация на сайте не нужна, умение программировать тоже.</p>
+    <div class="videoBox"><video id="introVideo" controls playsinline preload="metadata" poster="poster.jpg" src="intro.mp4"></video></div>
+    <a class="btn" href="#m1">Начать урок →</a>
+    <div class="facts">
+      <div class="fact"><b>5</b><span>коротких шагов</span></div>
+      <div class="fact"><b>0</b><span>строк кода руками</span></div>
+      <div class="fact"><b>1</b><span>готовый проект</span></div>
+    </div>
+  </div>
+  <h3>Что внутри</h3>
+  <div class="mods" id="modList">
+    <a class="mod" href="#m1" data-m="1"><span class="n">1</span><div><b>Знакомься, Claude</b><small>Регистрация и первый запрос · 4 мин</small></div></a>
+    <a class="mod" href="#m2" data-m="2"><span class="n">2</span><div><b>Научись ставить задачи</b><small>Формула хорошего промпта · 5 мин</small></div></a>
+    <a class="mod" href="#m3" data-m="3"><span class="n">3</span><div><b>Skills: дополнительные навыки</b><small>Что это и как включить · 5 мин</small></div></a>
+    <a class="mod" href="#m4" data-m="4"><span class="n">4</span><div><b>Создай свой первый проект</b><small>Сайт, игра или приложение · 10 мин</small></div></a>
+    <a class="mod" href="#m5" data-m="5"><span class="n">5</span><div><b>Что можно создавать дальше</b><small>Направления развития · 2 мин</small></div></a>
+  </div>
+  <div class="info" style="margin-top:18px">💡 Удобнее всего держать урок открытым в одном окне, а Claude в другом. На телефоне: копируешь промпт здесь и вставляешь в приложение Claude.</div>
+</section>
+
+<!-- ================= M1 ================= -->
+<section class="view" id="m1">
+  <span class="badge">Модуль 1 из 5 · 4 минуты</span>
+  <h2>Знакомься, Claude. Твой помощник в создании цифровых продуктов</h2>
+  <p class="lead">Claude — это нейросеть от компании Anthropic. Ей пишут обычными словами, как человеку, а она отвечает, объясняет, пишет тексты и программный код.</p>
+
+  <div class="card">
+    <h3>Почему он умеет делать сайты и игры</h3>
+    <p>Сайт, игра или калькулятор — это код. Claude пишет этот код за тебя и сразу показывает результат в отдельном окне прямо в чате. Такое окно называется <b>артефакт</b>. Можно нажимать кнопки, играть, проверять, а потом попросить что-то изменить.</p>
+    <div class="flow"><span>Идея</span><em>→</em><span>Промпт</span><em>→</em><span>Работа Claude</span><em>→</em><span>Проверка</span><em>→</em><span class="fin">Результат</span></div>
+    <p style="font-size:15px;color:var(--mute);text-align:center;margin:6px 0 0">Если результат не устроил, напиши, что поправить, и пройди круг ещё раз.</p>
+  </div>
+
+  <div class="card">
+    <h3>Что я сделал с Claude за 2 месяца</h3>
+    <p style="font-size:15.5px">Примеры из ролика, без навыков программирования:</p>
+    <div class="gal">
+      <figure><img src="img/agents.jpg" alt="" loading="lazy"><figcaption>Компания из 137 ИИ-агентов</figcaption></figure>
+      <figure><img src="img/retreat.jpg" alt="" loading="lazy"><figcaption>Сайт ретрита с бронированием и оплатой</figcaption></figure>
+      <figure><img src="img/autoservice.jpg" alt="" loading="lazy"><figcaption>Сайт автосервиса с калькулятором</figcaption></figure>
+      <figure><img src="img/shooter.jpg" alt="" loading="lazy"><figcaption>Шутер для двух телефонов</figcaption></figure>
+      <figure><img src="img/warehouse.jpg" alt="" loading="lazy"><figcaption>Программа управления складом</figcaption></figure>
+      <figure><img src="img/director.jpg" alt="" loading="lazy"><figcaption>Приложение «ИИ-директор»</figcaption></figure>
+      <figure><img src="img/game3d.jpg" alt="" loading="lazy"><figcaption>3D-игра для ребёнка</figcaption></figure>
+      <figure><img src="img/funnel.jpg" alt="" loading="lazy"><figcaption>Автоворонка из комментариев</figcaption></figure>
+      <figure><img src="img/course.jpg" alt="" loading="lazy"><figcaption>Мини-курс</figcaption></figure>
+      <figure><img src="img/server.jpg" alt="" loading="lazy"><figcaption>Свой сервер с ботом 24/7</figcaption></figure>
+      <figure><img src="img/deploy.jpg" alt="" loading="lazy"><figcaption>Сайты в интернете и приём оплаты</figcaption></figure>
+      <figure><img src="img/daughter.jpg" alt="" loading="lazy"><figcaption>Игра для дочки</figcaption></figure>
+    </div>
+    <div class="note" style="margin-bottom:0"><b>Честно:</b> всё это делалось два месяца, а не за один вечер. Для части проектов (сервер, приём оплаты) нужны платный тариф и больше шагов. В этом уроке начинаем с простого: первый проект делается бесплатно и с телефона.</div>
+  </div>
+
+  <div class="card">
+    <h3>Как зарегистрироваться</h3>
+    <ol class="steps">
+      <li><b>Открой Claude</b>Зайди на <a href="https://claude.ai" target="_blank" rel="noopener">claude.ai</a> в браузере или установи приложение «Claude» из App Store или Google Play.</li>
+      <li><b>Войди</b>Через аккаунт Google или по электронной почте: на неё придёт код или ссылка для входа.</li>
+      <li><b>Заполни профиль</b>Укажи имя. Если сервис попросит подтвердить номер телефона, сделай это.</li>
+      <li><b>Выбери бесплатный тариф</b>Тариф Free подходит для всего урока.</li>
+    </ol>
+    <div class="note"><b>Важно:</b> Claude официально работает не во всех странах. Список стран есть на сайте Anthropic: <a href="https://www.anthropic.com/supported-countries" target="_blank" rel="noopener">anthropic.com/supported-countries</a>.</div>
+  </div>
+
+  <div class="card">
+    <h3>Как устроен экран</h3>
+    <div class="schema">
+      <div class="phone" aria-label="Схема экрана Claude">
+        <span class="lbl">СХЕМА</span>
+        <div class="ph-top"><i></i>Новый чат</div>
+        <div class="ph-msg u">Сделай калькулятор бюджета</div>
+        <div class="ph-msg c">Готово! Вот калькулятор:</div>
+        <div class="ph-art"><span>🧮</span>Калькулятор бюджета<br>нажми, чтобы открыть</div>
+        <div class="ph-in">+ &nbsp;Напиши Claude…<em>↑</em></div>
+        <span class="mk" style="top:20px;left:8px">1</span>
+        <span class="mk" style="top:206px;right:6px">2</span>
+        <span class="mk" style="bottom:46px;left:6px">3</span>
+        <span class="mk" style="bottom:46px;right:6px">4</span>
+      </div>
+      <div class="legend">
+        <div><i>1</i><span><b>Меню.</b> Там список чатов, новый чат и настройки.</span></div>
+        <div><i>2</i><span><b>Артефакт.</b> Карточка с готовым сайтом или игрой. Нажми на неё, чтобы открыть.</span></div>
+        <div><i>3</i><span><b>Плюс.</b> Через него прикрепляют фото, файлы и скриншоты.</span></div>
+        <div><i>4</i><span><b>Поле ввода.</b> Сюда пишешь задачу и отправляешь стрелкой.</span></div>
+        <p style="font-size:13.5px;color:var(--mute);margin:4px 0 0">Это упрощённая схема, а не скриншот. В настоящем приложении кнопки могут выглядеть немного иначе.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Одна настройка, без которой сайт не появится</h3>
+    <p>Открой <b>Настройки → Возможности</b> (Settings → Capabilities) и включи <b>«Создание и редактирование файлов»</b>. В английской версии пункт может называться «Code execution and file creation». Без этого Claude не покажет готовый артефакт и не подключит Skills.</p>
+  </div>
+
+  <div class="card">
+    <h3>Что доступно бесплатно</h3>
+    <div class="plans">
+      <div class="plan"><h3>Free — 0 ₽</h3><ul>
+        <li>Чат с Claude в браузере и в приложении</li>
+        <li>Артефакты: сайты, игры и калькуляторы прямо в чате</li>
+        <li>Публикация проекта по ссылке</li>
+        <li>Skills и создание файлов (PDF, Word, Excel)</li>
+        <li>Есть лимит сообщений, он обновляется через несколько часов</li></ul></div>
+      <div class="plan pro"><h3>Pro — от $20 в месяц</h3><ul>
+        <li>В несколько раз больше сообщений</li>
+        <li>Самые сильные модели</li>
+        <li>Claude Code для больших проектов на компьютере</li>
+        <li>Пригодится, когда начнёшь делать серьёзные вещи</li></ul></div>
+    </div>
+    <p style="font-size:13.5px;color:var(--mute);margin:10px 0 0">Тарифы и лимиты меняются. Актуальные условия: <a href="https://claude.com/pricing" target="_blank" rel="noopener">claude.com/pricing</a>.</p>
+  </div>
+
+  <div class="act">
+    <h3>Твоё действие</h3>
+    <p>Зарегистрируйся, включи создание файлов и отправь Claude первое сообщение:</p>
+    <div class="prompt"><span class="t">Привет! Я новичок и никогда не программировал. Объясни в трёх предложениях, какие сайты, игры и приложения ты можешь помочь мне создать.</span><button class="copy">Скопировать</button></div>
+  </div>
+  <div class="res"><b>Ожидаемый результат:</b> Claude ответит простым языком и перечислит, что умеет. Значит, всё работает.</div>
+  <details><summary>Если не получилось</summary><div class="in"><ul>
+    <li>Не пришло письмо с кодом — проверь папку «Спам» или войди через Google.</li>
+    <li>Пишет, что сервис недоступен в твоей стране — проверь список стран по ссылке выше.</li>
+    <li>Пишет, что лимит сообщений исчерпан — подожди несколько часов, лимит обновится.</li>
+  </ul></div></details>
+
+  <label class="check"><input type="checkbox" data-done="1"> Готово, я написал Claude первое сообщение</label>
+  <div class="nav"><a class="btn ghost" href="#start">← Назад</a><a class="btn" href="#m2">Дальше →</a></div>
+</section>
+
+<!-- ================= M2 ================= -->
+<section class="view" id="m2">
+  <span class="badge">Модуль 2 из 5 · 5 минут</span>
+  <h2>Научись правильно ставить задачи нейросети</h2>
+  <p class="lead"><b>Промпт</b> — это задача, которую ты пишешь Claude. Нейросеть не читает мысли: чем понятнее задача, тем лучше результат.</p>
+
+  <div class="card">
+    <div class="cmp">
+      <div class="bad"><b>✕ Плохо</b><div class="q">«Сделай сайт»</div><p style="font-size:14.5px;margin:8px 0 0">Claude не знает, для кого сайт, что на нём должно быть и каким он должен быть. Получится что-то случайное.</p></div>
+      <div class="good"><b>✓ Хорошо</b><div class="q"><span class="f1">Создай современный сайт</span> <span class="f2">для небольшой кофейни.</span> <span class="f3">На главном экране размести название, красивую картинку, короткое предложение и кнопку заказа. Добавь меню с ценами, информацию о кофейне и контакты.</span> <span class="f4">Сделай адаптацию для телефона.</span> <span class="f5">После создания проверь, что все кнопки работают.</span></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Формула хорошего промпта</h3>
+    <div class="formula">
+      <div class="f1"><b>1. Задача</b><span>Что сделать: сайт, игру, калькулятор.</span></div>
+      <div class="f2"><b>2. Контекст</b><span>Для кого и зачем: кофейня, мастер маникюра, ребёнок 7 лет.</span></div>
+      <div class="f3"><b>3. Требования</b><span>Что обязательно должно быть: блоки, кнопки, цвета, стиль.</span></div>
+      <div class="f4"><b>4. Формат</b><span>Каким должен быть результат: удобно на телефоне, одним файлом.</span></div>
+      <div class="f5"><b>5. Проверка</b><span>Попроси Claude самого проверить работу: кнопки, расчёты, управление.</span></div>
+    </div>
+    <div class="info" style="margin-bottom:0">💡 Пиши так, будто объясняешь задачу живому подрядчику. Если результат не понравился, не начинай заново, а уточни в том же чате: «Сделай кнопки крупнее», «Поменяй цвет на зелёный».</div>
+  </div>
+
+  <div class="card">
+    <h3>Готовые промпты</h3>
+    <p style="font-size:15.5px">Скопируй любой и замени слова в [квадратных скобках] на свои.</p>
+    <div class="prompt"><div class="ptitle">Сайт</div><span class="t">Создай современный одностраничный сайт для [кофейни «Утро»]. На главном экране: название, красивая иллюстрация (нарисуй её сам), короткое предложение и кнопка «Заказать». Добавь меню из 8 позиций с ценами, блок «О нас» и контакты. Светлый тёплый дизайн, удобно на телефоне, всё в одном файле. После создания проверь, что все кнопки работают.</span><button class="copy">Скопировать</button></div>
+    <div class="prompt"><div class="ptitle">Игра</div><span class="t">Создай простую браузерную игру «[Поймай звезду]». Сверху падают звёзды, я ловлю их корзиной: пальцем на телефоне и стрелками на компьютере. За пойманную звезду +1 очко, за пропущенную −1 жизнь, всего 3 жизни. Скорость постепенно растёт. Покажи счёт, рекорд и кнопку «Играть снова». Проверь, что управление работает на телефоне.</span><button class="copy">Скопировать</button></div>
+    <div class="prompt"><div class="ptitle">Приложение</div><span class="t">Создай калькулятор [стоимости услуг для мастера маникюра]. Я выбираю услуги галочками (маникюр, покрытие, дизайн, снятие, укрепление — у каждой своя цена), а калькулятор показывает итоговую сумму и примерное время. Добавь кнопку «Сбросить». Светлый дизайн, крупные кнопки, удобно на телефоне. Проверь расчёт на примере.</span><button class="copy">Скопировать</button></div>
+    <div class="prompt"><div class="ptitle">Улучшить дизайн</div><span class="t">Улучши дизайн этого проекта: сделай его современнее и аккуратнее. Больше воздуха между блоками, единый стиль кнопок, плавные анимации при появлении и нажатии. Ничего не удаляй и не ломай. В конце коротко перечисли, что изменил.</span><button class="copy">Скопировать</button></div>
+    <div class="prompt"><div class="ptitle">Исправить ошибку</div><span class="t">Не работает вот что: [опиши, что нажал и что произошло, или вставь текст ошибки]. Найди причину и исправь. Потом объясни простыми словами, что было не так, и проверь, что остальное работает.</span><button class="copy">Скопировать</button></div>
+  </div>
+
+  <div class="card">
+    <h3>Как переделать промпт под себя</h3>
+    <p>Возьми промпт «Сайт» и поменяй три вещи: <b>кого</b> (кофейня → барбершоп), <b>что внутри</b> (меню → услуги и цены) и <b>стиль</b> (тёплый → строгий чёрно-белый). Формула останется той же, а сайт получится твоим.</p>
+  </div>
+
+  <div class="act">
+    <h3>Твоё действие</h3>
+    <p>Отправь Claude свой первый промпт по формуле: попроси визитку о себе.</p>
+    <div class="prompt"><span class="t">Создай одностраничную визитку обо мне. Меня зовут [имя], я [чем занимаешься]. Нужны: имя крупно, три коротких факта обо мне и кнопка «Написать мне». Светлый современный дизайн, удобно на телефоне, одним файлом. Проверь, что кнопка работает.</span><button class="copy">Скопировать</button></div>
+  </div>
+  <div class="res"><b>Ожидаемый результат:</b> через минуту в чате появится карточка с готовой страницей. Нажми на неё, и откроется твоя визитка.</div>
+  <details><summary>Если не получилось</summary><div class="in"><ul>
+    <li>Claude показал только код, а страницы не видно — проверь, что в настройках включено создание файлов, и допиши: «Покажи результат как артефакт».</li>
+    <li>Получилось не то — уточни в том же чате, что именно поменять. Начинать заново не нужно.</li>
+    <li>Ответ оборвался на середине — напиши «Продолжи».</li>
+  </ul></div></details>
+
+  <label class="check"><input type="checkbox" data-done="2"> Готово, я отправил свой промпт</label>
+  <div class="nav"><a class="btn ghost" href="#m1">← Назад</a><a class="btn" href="#m3">Дальше →</a></div>
+</section>
+
+<!-- ================= M3 ================= -->
+<section class="view" id="m3">
+  <span class="badge">Модуль 3 из 5 · 5 минут</span>
+  <h2>Skills: как дать Claude дополнительные навыки</h2>
+  <p class="lead">Представь, что Claude — твой универсальный помощник. А Skills — это специальные инструкции и материалы, с которыми он выполняет определённую работу стабильнее и качественнее.</p>
+
+  <div class="card">
+    <div class="cmp" style="grid-template-columns:1fr 1fr">
+      <div class="plan"><h3>Промпт</h3><p style="font-size:15px;margin:0">Задача на один раз в одном чате. В следующий раз всё придётся объяснять заново.</p></div>
+      <div class="plan pro"><h3>Skill</h3><p style="font-size:15px;margin:0">Инструкция, сохранённая один раз. Claude сам подключает её, когда задача подходит.</p></div>
+    </div>
+    <div class="note" style="margin-bottom:0"><b>Главное:</b> создавать проекты можно и без Skills. Навыки только улучшают результат, поэтому этот модуль можно пройти быстро.</div>
+  </div>
+
+  <div class="card">
+    <h3>Где искать навыки</h3>
+    <ol class="steps">
+      <li><b>Встроенные навыки от Anthropic</b>Они уже есть в приложении Claude, ничего скачивать не нужно.</li>
+      <li><b>Официальная библиотека Anthropic</b><a href="https://github.com/anthropics/skills" target="_blank" rel="noopener">github.com/anthropics/skills</a> — навыки от создателей Claude.</li>
+      <li><b>Свой навык</b>Его можно создать вместе с Claude обычным диалогом, об этом ниже.</li>
+    </ol>
+    <div class="note" style="margin-bottom:0"><b>Безопасность:</b> устанавливай навыки только из надёжных источников. В навыке может быть код, который выполнит Claude. Не скачивай сборки вроде «500 навыков бесплатно».</div>
+  </div>
+
+  <div class="card">
+    <h3>Как включить навык в приложении Claude</h3>
+    <ol class="steps">
+      <li><b>Включи создание файлов</b>Настройки → Возможности → «Создание и редактирование файлов». Без этого раздела с навыками просто не видно.</li>
+      <li><b>Открой раздел навыков</b>В меню: Настроить → Навыки (Customize → Skills).</li>
+      <li><b>Включи нужный навык</b>Нажми на переключатель рядом с ним.</li>
+      <li><b>Чтобы добавить свой</b>Нажми «+» и загрузи навык ZIP-архивом. С компьютера это делать удобнее.</li>
+    </ol>
+    <p style="font-size:15.5px;margin:0"><b>Как понять, что навык работает:</b> обычно во время ответа видно, что Claude открыл навык. Ещё можно написать прямо: «Используй навык [название]».</p>
+  </div>
+
+  <h3 style="margin-top:22px">3 навыка, с которых стоит начать</h3>
+
+  <div class="sk">
+    <div class="h"><div class="ic" style="background:var(--sky)">📄</div><div><b>Документы: PDF, Word, Excel, PowerPoint</b><br><small style="color:var(--mute);font-weight:700">Встроенные · от Anthropic</small></div></div>
+    <dl>
+      <dt>Зачем</dt><dd>Claude создаёт готовые файлы, которые можно скачать.</dd>
+      <dt>Когда</dt><dd>Меню, прайс, презентация, таблица расходов.</dd>
+      <dt>Установка</dt><dd>Не нужна, достаточно включить создание файлов.</dd>
+      <dt>Запрос</dt><dd>«Сделай PDF-меню кофейни на одну страницу: 8 напитков с ценами, светлый дизайн».</dd>
+      <dt>Результат</dt><dd>Готовый PDF, который можно скачать.</dd>
+    </dl>
+  </div>
+
+  <div class="sk">
+    <div class="h"><div class="ic" style="background:var(--pink)">🎨</div><div><b>frontend-design</b><br><small style="color:var(--mute);font-weight:700">Официальный навык Anthropic</small></div></div>
+    <dl>
+      <dt>Зачем</dt><dd>Делает сайты и интерфейсы, которые не выглядят шаблонно.</dd>
+      <dt>Когда</dt><dd>Сайты, лендинги, экраны приложений.</dd>
+      <dt>Установка</dt><dd>Скачай папку <span class="mono">skills/frontend-design</span> из <a href="https://github.com/anthropics/skills" target="_blank" rel="noopener">github.com/anthropics/skills</a> ZIP-архивом и загрузи в «Навыки → +». С компьютера удобнее.</dd>
+      <dt>Запрос</dt><dd>«Используй навык frontend-design и сделай мой сайт кофейни стильнее».</dd>
+      <dt>Результат</dt><dd>Более продуманный и «дизайнерский» сайт.</dd>
+    </dl>
+  </div>
+
+  <div class="sk">
+    <div class="h"><div class="ic" style="background:var(--mint)">🛠️</div><div><b>skill-creator</b><br><small style="color:var(--mute);font-weight:700">От Anthropic · создаёт новые навыки</small></div></div>
+    <dl>
+      <dt>Зачем</dt><dd>Помогает собрать свой навык обычным диалогом.</dd>
+      <dt>Когда</dt><dd>Ты часто просишь одно и то же и надоело каждый раз объяснять.</dd>
+      <dt>Установка</dt><dd>Обычно он есть среди примеров Anthropic в разделе «Навыки». Его нужно просто включить. Если его там нет, он лежит в той же библиотеке на GitHub.</dd>
+      <dt>Запрос</dt><dd>«Помоги создать навык: когда я прошу сайт, делай светлый дизайн, адаптацию под телефон и проверяй все кнопки».</dd>
+      <dt>Результат</dt><dd>Claude соберёт навык и предложит его сохранить.</dd>
+    </dl>
+  </div>
+
+  <details><summary>Чем Skills в Claude отличаются от Skills в Claude Code</summary><div class="in">
+    <p><b>Приложение Claude</b> (сайт и телефон): навыки включаются переключателем или загружаются ZIP-архивом. Этого хватит для всего урока.</p>
+    <p><b>Claude Code</b> — программа для работы с проектами на компьютере, нужен платный тариф. В нём навык кладут в папку проекта или ставят одной командой. Навыки, включённые в твоём аккаунте Claude, подгружаются и туда. Новичку Claude Code пока не нужен.</p>
+  </div></details>
+
+  <div class="act">
+    <h3>Твоё действие</h3>
+    <p>Включи создание файлов и попроси Claude сделать файл. Если раздел навыков не появился, отправь тот же запрос без навыка: Claude ответит текстом.</p>
+    <div class="prompt"><span class="t">Сделай PDF-меню для [кофейни «Утро»] на одну страницу: 8 напитков с ценами, короткое описание у каждого, светлый тёплый дизайн.</span><button class="copy">Скопировать</button></div>
+  </div>
+  <div class="res"><b>Ожидаемый результат:</b> в чате появится PDF-файл, его можно открыть и скачать.</div>
+  <details><summary>Если не получилось</summary><div class="in"><ul>
+    <li>Не видно раздела «Навыки» или навык серый — почти всегда выключено создание файлов. Включи его в настройках.</li>
+    <li>ZIP не загружается — проверь, что внутри архива лежит папка с файлом SKILL.md.</li>
+    <li>Ничего не помогает — пропусти этот шаг. Для первого проекта навыки не нужны.</li>
+  </ul></div></details>
+
+  <label class="check"><input type="checkbox" data-done="3"> Готово, я разобрался с навыками</label>
+  <div class="nav"><a class="btn ghost" href="#m2">← Назад</a><a class="btn" href="#m4">Дальше →</a></div>
+</section>
+
+<!-- ================= M4 ================= -->
+<section class="view" id="m4">
+  <span class="badge">Модуль 4 из 5 · 10 минут · главный</span>
+  <h2>От слов к делу. Создай свой первый цифровой продукт</h2>
+  <p class="lead">Выбери один вариант. Если сомневаешься, начни с сайта: это самый простой и наглядный первый опыт.</p>
+
+  <div class="tabs" role="tablist">
+    <button class="tab on" data-pane="pSite"><span class="rec">Советую</span>🌐 Сайт<small>кофейня</small></button>
+    <button class="tab" data-pane="pGame">🎮 Игра<small>на реакцию</small></button>
+    <button class="tab" data-pane="pApp">🧮 Приложение<small>калькулятор</small></button>
+  </div>
+
+  <!-- SITE -->
+  <div class="pane on" id="pSite">
+    <div class="demo"><div class="cap">ПРИМЕР ТОГО, ЧТО ПОЛУЧИТСЯ</div>
+      <div class="cof-h"><div><h4>Кофейня «Утро»</h4><p>Свежий кофе и выпечка рядом с домом</p><span class="cof-b">Заказать</span></div>
+        <svg class="cup" viewBox="0 0 64 64"><path d="M12 26h34v14a14 14 0 0 1-14 14h-6a14 14 0 0 1-14-14z" fill="#fff" stroke="#5A2E1E" stroke-width="3"/><path d="M46 30h4a6 6 0 0 1 0 12h-5" fill="none" stroke="#5A2E1E" stroke-width="3"/><path d="M24 8c-3 4 3 6 0 11M32 6c-3 5 3 7 0 13" stroke="#E0489A" stroke-width="3" fill="none" stroke-linecap="round"/></svg></div>
+      <div class="cof-m"><div>Капучино<span>220 ₽</span></div><div>Латте<span>240 ₽</span></div><div>Раф<span>260 ₽</span></div><div>Круассан<span>180 ₽</span></div></div>
+    </div>
+    <div class="prompt"><div class="ptitle">Промпт</div><span class="t">Создай современный одностраничный сайт для небольшой кофейни «Утро». На главном экране: название, красивая иллюстрация чашки кофе (нарисуй её сам), короткое предложение и кнопка «Заказать». Добавь меню из 8 позиций с ценами, блок «О нас» и контакты с адресом и временем работы. Светлый тёплый дизайн, удобно на телефоне, всё в одном файле. Кнопка «Заказать» должна плавно прокручивать к меню. После создания проверь, что все кнопки работают.</span><button class="copy">Скопировать</button></div>
+    <ol class="steps">
+      <li><b>Вставь промпт</b>Открой новый чат в Claude, вставь промпт и отправь.</li>
+      <li><b>Подожди 1–2 минуты</b>Claude пишет код. Ничего нажимать не нужно.</li>
+      <li><b>Открой результат</b>На телефоне нажми на карточку с сайтом. На компьютере сайт откроется справа.</li>
+      <li><b>Проверь</b>Нажми все кнопки и прокрути страницу до конца.</li>
+      <li><b>Улучши</b>Отправь одну-две правки из списка ниже.</li>
+      <li><b>Сохрани</b>Нажми «Поделиться» или «Опубликовать» и скопируй ссылку. С компьютера сайт можно ещё и скачать файлом.</li>
+    </ol>
+    <h3>Правки для улучшения</h3>
+    <div class="prompt"><span class="t">Добавь блок с отзывами: 3 карточки с именем и короткой фразой. Помечай их как «пример отзыва», пока нет настоящих.</span><button class="copy">Скопировать</button></div>
+    <div class="prompt"><span class="t">Сделай меню с вкладками «Кофе», «Чай», «Выпечка» и плавным переключением.</span><button class="copy">Скопировать</button></div>
+    <div class="prompt"><span class="t">Добавь плавные анимации появления блоков при прокрутке и сделай кнопки заметнее.</span><button class="copy">Скопировать</button></div>
+  </div>
+
+  <!-- GAME -->
+  <div class="pane" id="pGame">
+    <div class="demo"><div class="cap">ПРИМЕР ТОГО, ЧТО ПОЛУЧИТСЯ</div>
+      <div class="gm"><span class="sc">Очки: 12</span><span class="lv">❤️❤️🤍</span><span class="st" style="left:20%;top:40px">⭐</span><span class="st" style="left:62%;top:78px">⭐</span><span class="st" style="left:44%;top:20px">⭐</span><span class="bk"></span></div>
+    </div>
+    <div class="prompt"><div class="ptitle">Промпт</div><span class="t">Создай простую браузерную игру «Поймай звезду». Сверху падают звёзды, я ловлю их корзиной внизу экрана: пальцем на телефоне и стрелками на компьютере. За пойманную звезду +1 очко, за пропущенную −1 жизнь, всего 3 жизни. Каждые 10 очков скорость растёт. Покажи счёт, жизни, рекорд и экран «Игра окончена» с кнопкой «Играть снова». Яркий, но не перегруженный дизайн, всё в одном файле. Проверь, что управление пальцем работает на телефоне.</span><button class="copy">Скопировать</button></div>
+    <ol class="steps">
+      <li><b>Вставь промпт и отправь</b>Лучше в новом чате.</li>
+      <li><b>Открой игру</b>Нажми на карточку с результатом.</li>
+      <li><b>Проверь работу</b>Сыграй 2–3 раза: звёзды падают, очки считаются, жизни уменьшаются, кнопка «Играть снова» работает.</li>
+      <li><b>Если что-то не так</b>Опиши Claude, что произошло: «Корзина не двигается пальцем». Он исправит.</li>
+      <li><b>Сохрани и отправь другу</b>«Поделиться» или «Опубликовать» → скопируй ссылку.</li>
+    </ol>
+    <h3>Как улучшить игру</h3>
+    <div class="prompt"><span class="t">Добавь бонус: иногда падает сердечко, которое возвращает одну жизнь.</span><button class="copy">Скопировать</button></div>
+    <div class="prompt"><span class="t">Добавь звуки при поимке звезды и при проигрыше, а также кнопку «Без звука».</span><button class="copy">Скопировать</button></div>
+    <div class="prompt"><span class="t">Сделай три уровня сложности на стартовом экране: лёгкий, средний, сложный.</span><button class="copy">Скопировать</button></div>
+  </div>
+
+  <!-- APP -->
+  <div class="pane" id="pApp">
+    <div class="demo"><div class="cap">ПРИМЕР ТОГО, ЧТО ПОЛУЧИТСЯ</div>
+      <div class="bu">
+        <div class="r">Еда<span>18 000 ₽</span></div><div class="bar"><i style="width:36%"></i></div>
+        <div class="r">Жильё<span>20 000 ₽</span></div><div class="bar"><i style="width:40%"></i></div>
+        <div class="r">Транспорт<span>5 000 ₽</span></div><div class="bar"><i style="width:10%"></i></div>
+        <div class="tot">Остаток<span>7 000 ₽</span></div>
+      </div>
+    </div>
+    <div class="prompt"><div class="ptitle">Промпт</div><span class="t">Создай калькулятор семейного бюджета на месяц. Сверху поле «Доход». Ниже категории расходов: еда, жильё, транспорт, развлечения, другое — в каждую можно ввести сумму. Калькулятор сразу показывает общие расходы, остаток (красным, если он меньше нуля) и долю каждой категории полосками. Добавь кнопку «Очистить». Светлый дизайн, крупные поля, удобно на телефоне, всё в одном файле, без сервера. Проверь расчёты на примере: доход 50 000, расходы 18 000 + 20 000 + 5 000 — должен получиться остаток 7 000.</span><button class="copy">Скопировать</button></div>
+    <ol class="steps">
+      <li><b>Вставь промпт и отправь</b>Лучше в новом чате.</li>
+      <li><b>Открой калькулятор</b>Нажми на карточку с результатом.</li>
+      <li><b>Проверь расчёты</b>Введи пример из промпта: остаток должен быть 7 000. Потом свои цифры.</li>
+      <li><b>Улучши</b>Отправь правки из списка ниже.</li>
+      <li><b>Сохрани</b>«Поделиться» или «Опубликовать» → ссылка. Её можно добавить на экран «Домой» в телефоне.</li>
+    </ol>
+    <h3>Как улучшить приложение</h3>
+    <div class="prompt"><span class="t">Добавь возможность создавать свои категории расходов и удалять их.</span><button class="copy">Скопировать</button></div>
+    <div class="prompt"><span class="t">Добавь круговую диаграмму расходов и цель накоплений с полоской прогресса.</span><button class="copy">Скопировать</button></div>
+    <div class="prompt"><span class="t">Сделай, чтобы введённые цифры сохранялись в браузере и не пропадали после закрытия страницы.</span><button class="copy">Скопировать</button></div>
+  </div>
+
+  <div class="card">
+    <h3>Прототип и готовый продукт — в чём разница</h3>
+    <div class="plans">
+      <div class="plan"><h3>Что ты делаешь сейчас: прототип</h3><ul><li>Работает и выглядит хорошо</li><li>Готов за 10–30 минут</li><li>Подходит, чтобы показать идею, потренироваться или пользоваться самому</li></ul></div>
+      <div class="plan pro"><h3>Готовый продукт</h3><ul><li>Настоящие тексты, фото и цены</li><li>Свой домен, заявки, иногда приём оплаты</li><li>Проверка на разных телефонах и доработки</li><li>Обычно дни работы, а не минуты</li></ul></div>
+    </div>
+  </div>
+
+  <details><summary>Если не получилось</summary><div class="in"><ul>
+    <li>Нет карточки с результатом — включи создание файлов в настройках и напиши: «Покажи результат как артефакт».</li>
+    <li>Что-то сломалось после правки — напиши: «Верни как было до последнего изменения». Ещё можно переключиться на прошлую версию прямо в артефакте.</li>
+    <li>Не видно картинок — внешние фотографии в артефакте могут не загружаться. Попроси: «Нарисуй иллюстрации сам, без внешних ссылок».</li>
+    <li>Закончились сообщения — подожди, пока лимит обновится. Проект сохранится в чате.</li>
+  </ul></div></details>
+
+  <button class="btn" id="doneProject" style="width:100%;margin-top:18px">🎉 Я создал свой проект!</button>
+  <div class="nav"><a class="btn ghost" href="#m3">← Назад</a><a class="btn ghost" href="#m5">Дальше →</a></div>
+</section>
+
+<!-- ================= M5 ================= -->
+<section class="view" id="m5">
+  <span class="badge">Модуль 5 из 5 · 2 минуты</span>
+  <h2>Это только начало. На что ещё способен Claude?</h2>
+  <p class="lead">Искусственный интеллект — это не игрушка для генерации ответов, а инструмент, с которым создают настоящие цифровые продукты.</p>
+  <div class="dirs">
+    <div class="dir"><span class="e">🌐</span><b>Сайты</b><span>Визитки, лендинги, сайты для записи клиентов</span></div>
+    <div class="dir"><span class="e">🎮</span><b>Игры</b><span>Для детей, для друзей, обучающие игры</span></div>
+    <div class="dir"><span class="e">📱</span><b>Приложения</b><span>Планировщики, трекеры привычек, личные помощники</span></div>
+    <div class="dir"><span class="e">🤖</span><b>Telegram-боты</b><span>Ответы клиентам, запись, напоминания</span></div>
+    <div class="dir"><span class="e">⚡</span><b>Автоматизация</b><span>Отчёты, таблицы, рутина, которая отнимает часы</span></div>
+    <div class="dir"><span class="e">🧰</span><b>Инструменты для бизнеса</b><span>Калькуляторы, прайсы, учёт</span></div>
+    <div class="dir" style="grid-column:1/-1"><span class="e">🧪</span><b>Прототипы сервисов</b><span>Проверить идею за вечер, прежде чем вкладывать деньги</span></div>
+  </div>
+
+  <div class="card">
+    <h3>Можно ли на этом зарабатывать</h3>
+    <p>Некоторые проекты можно делать для других за деньги:</p>
+    <ul style="margin:0 0 12px 18px"><li>сайты для небольших компаний и мастеров;</li><li>посадочные страницы под рекламу;</li><li>калькуляторы для бизнеса: ремонт, доставка, услуги;</li><li>простые автоматизации;</li><li>AI-креативы с помощью соответствующих инструментов.</li></ul>
+    <div class="note" style="margin:0"><b>Честно:</b> доход никто не гарантирует. Чтобы на этом зарабатывать, нужны практика, примеры работ и умение договариваться с клиентами. Нейросеть ускоряет работу, но не делает её за тебя целиком.</div>
+  </div>
+
+  <div class="card">
+    <h3>Когда понадобится больше, чем бесплатный тариф</h3>
+    <ul style="margin-left:18px"><li><b>Claude Code</b> — для больших проектов на компьютере, нужен платный тариф.</li><li><b>Свой домен и хостинг</b> — чтобы у сайта был адрес вроде moyakofeynya.ru.</li><li><b>Приём оплаты</b> — нужны ИП или самозанятость и платёжный сервис.</li><li><b>Сервер</b> — чтобы бот работал круглосуточно.</li></ul>
+    <p style="margin:0">Всё это я делал в своих проектах из ролика и буду разбирать в блоге.</p>
+  </div>
+
+  <div class="act" style="text-align:center">
+    <h3>Следи за моим блогом</h3>
+    <p>Дальше я буду показывать, как с помощью нейросетей создавать сайты, приложения и AI-креативы. Не просто пользоваться искусственным интеллектом, а создавать с его помощью полезные продукты.</p>
+    <a class="btn ghost" href="https://www.instagram.com/miral_vse/" target="_blank" rel="noopener">Instagram @miral_vse</a>
+  </div>
+
+  <label class="check"><input type="checkbox" data-done="5"> Я прошёл урок до конца</label>
+  <div class="nav"><a class="btn ghost" href="#m4">← Назад</a><a class="btn" href="#done">Завершить →</a></div>
+</section>
+
+<!-- ================= DONE ================= -->
+<section class="view" id="done">
+  <div class="hero">
+    <div style="font-size:64px">🏆</div>
+    <h1>Урок <span class="v">пройден</span></h1>
+    <p class="lead">Теперь ты понимаешь, как работает Claude, умеешь ставить ему задачи, знаешь, зачем нужны Skills, и сделал свой первый проект.</p>
+  </div>
+  <div class="card" style="text-align:center">
+    <h3>Бонус: 10 готовых промптов</h3>
+    <p style="font-size:15.5px">Шпаргалка в PDF: сайт, лендинг, игра, калькулятор, планировщик, дизайн, ошибки, анимации, адаптация под телефон, финальная проверка.</p>
+    <button class="btn" id="pdfBtn">Скачать PDF-шпаргалку</button>
+    <p style="font-size:13.5px;color:var(--mute);margin:10px 0 0">Не скачивается? <a href="cheatsheet.pdf" target="_blank" rel="noopener">Открой PDF по ссылке</a></p>
+  </div>
+  <div class="card">
+    <h3>Что попробовать дальше</h3>
+    <div class="row"><a class="btn small ghost" href="#m4">Сделать другой проект</a><a class="btn small ghost" href="#m2">Повторить промпты</a><a class="btn small ghost" href="#links">Справочник</a></div>
+  </div>
+  <div class="act" style="text-align:center">
+    <h3>Дальше — в блоге</h3>
+    <p>Сайты, приложения, AI-креативы и реальные проекты: как я их делаю с нейросетями.</p>
+    <a class="btn ghost" href="https://www.instagram.com/miral_vse/" target="_blank" rel="noopener">Подписаться @miral_vse</a>
+  </div>
+</section>
+
+<!-- ================= LINKS ================= -->
+<section class="view" id="links">
+  <span class="badge">Справочник</span>
+  <h2>Полезные ссылки</h2>
+  <div class="card"><ul class="links">
+    <li><a href="https://claude.ai" target="_blank" rel="noopener">claude.ai</a> — сам Claude</li>
+    <li><a href="https://claude.com/pricing" target="_blank" rel="noopener">Тарифы Claude</a></li>
+    <li><a href="https://www.anthropic.com/supported-countries" target="_blank" rel="noopener">Страны, где доступен Claude</a></li>
+    <li><a href="https://support.claude.com/en/articles/9487310-what-are-artifacts-and-how-do-i-use-them" target="_blank" rel="noopener">Что такое артефакты</a> (справка Anthropic)</li>
+    <li><a href="https://support.claude.com/en/articles/9547008" target="_blank" rel="noopener">Как поделиться артефактом</a> (справка Anthropic)</li>
+    <li><a href="https://support.claude.com/en/articles/12512180" target="_blank" rel="noopener">Как пользоваться Skills</a> (справка Anthropic)</li>
+    <li><a href="https://github.com/anthropics/skills" target="_blank" rel="noopener">Официальная библиотека навыков Anthropic</a></li>
+    <li><a href="https://docs.claude.com/en/docs/build-with-claude/prompt-engineering/overview" target="_blank" rel="noopener">Как писать промпты</a> (документация Anthropic)</li>
+    <li><a href="https://docs.claude.com/en/docs/claude-code/overview" target="_blank" rel="noopener">Claude Code</a> — для следующего уровня</li>
+  </ul>
+  <p style="font-size:13.5px;color:var(--mute);margin:0">Справка Anthropic на английском. Если нужно, открой её в браузере с переводом страницы. Сведения о тарифах и функциях актуальны на ноябрь 2026.</p></div>
+  <div class="card" style="text-align:center"><button class="btn" id="pdfBtn2">Скачать PDF «10 промптов»</button>
+    <p style="font-size:13.5px;color:var(--mute);margin:10px 0 0"><a href="cheatsheet.pdf" target="_blank" rel="noopener">Открыть PDF по ссылке</a></p></div>
+  <div class="nav"><a class="btn ghost" href="#start">← В начало</a></div>
+</section>
+
+</main>
+<footer>Бесплатный урок от <a href="https://www.instagram.com/miral_vse/" target="_blank" rel="noopener">@miral_vse</a> · Claude — продукт компании Anthropic. Урок неофициальный.</footer>
+
+<div class="overlay" id="cong"><div class="cong">
+  <div class="big">🎉</div>
+  <h2>Поздравляю!</h2>
+  <p>Ты только что создал свой первый цифровой проект с помощью искусственного интеллекта.</p>
+  <div class="row"><button class="btn small ghost" id="tryOther">Попробовать другой вариант</button><a class="btn small" href="#m5" id="toM5">Дальше →</a></div>
+</div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  var KEY='claude-first-project-v1', state={done:{}};
+  try{var s=JSON.parse(localStorage.getItem(KEY)||'null');if(s&&s.done)state=s}catch(e){}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
+  var views=['start','m1','m2','m3','m4','m5','done','links'];
+  function show(){
+    var h=(location.hash||'').replace('#','');if(views.indexOf(h)<0)h='start';
+    views.forEach(function(v){document.getElementById(v).classList.toggle('on',v===h)});
+    document.getElementById('drawer').classList.remove('on');
+    window.scrollTo(0,0);
+    if(h!=='start'){var vid=document.getElementById('introVideo');try{vid.pause()}catch(e){}}
+  }
+  function render(){
+    var n=0;for(var i=1;i<=5;i++)if(state.done[i])n++;
+    document.getElementById('progBar').style.width=(n/5*100)+'%';
+    document.getElementById('progT').textContent=n+'/5';
+    document.querySelectorAll('[data-m]').forEach(function(a){a.classList.toggle('done',!!state.done[a.dataset.m])});
+    document.querySelectorAll('input[data-done]').forEach(function(c){c.checked=!!state.done[c.dataset.done]});
+  }
+  window.addEventListener('hashchange',show);
+  document.querySelectorAll('input[data-done]').forEach(function(c){c.addEventListener('change',function(){state.done[c.dataset.done]=c.checked;save();render();if(c.checked)toast('Шаг отмечен ✓')})});
+  // menu
+  var mb=document.getElementById('menuBtn'),dr=document.getElementById('drawer');
+  mb.addEventListener('click',function(){var on=dr.classList.toggle('on');mb.setAttribute('aria-expanded',on)});
+  // auto-mark when leaving module via "Дальше"
+  // copy
+  function toast(t){var el=document.getElementById('toast');el.textContent=t;el.classList.add('on');clearTimeout(el._t);el._t=setTimeout(function(){el.classList.remove('on')},1800)}
+  function fallbackCopy(text){var ta=document.createElement('textarea');ta.value=text;ta.setAttribute('readonly','');ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();ta.setSelectionRange(0,text.length);var ok=false;try{ok=document.execCommand('copy')}catch(e){}document.body.removeChild(ta);return ok}
+  document.querySelectorAll('.copy').forEach(function(b){b.addEventListener('click',function(){
+    var t=b.parentElement.querySelector('.t').textContent.trim();
+    function done(ok){if(ok){b.textContent='Скопировано ✓';b.classList.add('ok');toast('Промпт скопирован. Вставь его в Claude');setTimeout(function(){b.textContent='Скопировать';b.classList.remove('ok')},2200)}else{toast('Не удалось скопировать — выдели текст и скопируй вручную');var r=document.createRange();r.selectNodeContents(b.parentElement.querySelector('.t'));var sel=getSelection();sel.removeAllRanges();sel.addRange(r)}}
+    try{if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){done(true)},function(){done(fallbackCopy(t))})}else done(fallbackCopy(t))}catch(e){done(fallbackCopy(t))}
+  })});
+  // tabs
+  document.querySelectorAll('.tab').forEach(function(tb){tb.addEventListener('click',function(){
+    document.querySelectorAll('.tab').forEach(function(x){x.classList.toggle('on',x===tb)});
+    document.querySelectorAll('.pane').forEach(function(p){p.classList.toggle('on',p.id===tb.dataset.pane)});
+  })});
+  // congrats
+  var cong=document.getElementById('cong');
+  document.getElementById('doneProject').addEventListener('click',function(){
+    state.done[4]=true;save();render();cong.classList.add('on');confetti();
+  });
+  document.getElementById('tryOther').addEventListener('click',function(){cong.classList.remove('on');document.querySelector('.tabs').scrollIntoView({behavior:'smooth'})});
+  document.getElementById('toM5').addEventListener('click',function(){cong.classList.remove('on')});
+  cong.addEventListener('click',function(e){if(e.target===cong)cong.classList.remove('on')});
+  function confetti(){var c=['#6C4CF1','#E0489A','#3CC48D','#FFC93C','#5AA9FF'];for(var i=0;i<70;i++){var d=document.createElement('i');d.className='conf';d.style.left=Math.random()*100+'vw';d.style.background=c[i%5];d.style.animationDuration=(1.6+Math.random()*1.6)+'s';d.style.animationDelay=(Math.random()*.4)+'s';document.body.appendChild(d);setTimeout(function(x){x.remove()}.bind(null,d),3800)}}
+  // mark module done when finishing m5
+  document.querySelector('#m5 .nav .btn:last-child').addEventListener('click',function(){state.done[5]=true;save();render()});
+  // PDF download via artifact capability, fallback: open link
+  var dl=null;
+  try{if(window.claude&&window.claude.use){window.claude.use('downloads').then(function(n){dl=n}).catch(function(){})}}catch(e){}
+  function getPdf(){
+    if(dl){fetch('cheatsheet.pdf').then(function(r){if(!r.ok)throw 0;return r.blob()}).then(function(b){return dl.save({filename:'10-promptov-dlya-Claude.pdf',data:b})}).then(function(){toast('PDF сохранён')}).catch(function(){location.href='cheatsheet.pdf'})}
+    else{var a=document.createElement('a');a.href='cheatsheet.pdf';a.download='10-promptov-dlya-Claude.pdf';a.target='_blank';a.rel='noopener';document.body.appendChild(a);a.click();a.remove()}
+  }
+  document.getElementById('pdfBtn').addEventListener('click',getPdf);
+  document.getElementById('pdfBtn2').addEventListener('click',getPdf);
+  // video fallback: if direct src fails, load as blob
+  var vid=document.getElementById('introVideo');
+  vid.addEventListener('error',function once(){vid.removeEventListener('error',once);fetch('intro.mp4').then(function(r){return r.blob()}).then(function(b){vid.src=URL.createObjectURL(b)}).catch(function(){})},true);
+  render();show();
+})();
+</script>
+</body>
+</html>
